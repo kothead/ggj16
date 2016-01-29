@@ -1,19 +1,47 @@
 
 pack.png
-size: 1024,256
+size: 1024,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-test
+continue
   rotate: false
   xy: 2, 2
+  size: 232, 67
+  orig: 232, 67
+  offset: 0, 0
+  index: -1
+exit
+  rotate: false
+  xy: 459, 136
+  size: 107, 67
+  orig: 107, 67
+  offset: 0, 0
+  index: -1
+game_over
+  rotate: false
+  xy: 2, 73
+  size: 453, 130
+  orig: 453, 130
+  offset: 0, 0
+  index: -1
+pause
+  rotate: false
+  xy: 606, 207
+  size: 284, 130
+  orig: 284, 130
+  offset: 0, 0
+  index: -1
+test
+  rotate: false
+  xy: 894, 273
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 title
   rotate: false
-  xy: 2, 70
+  xy: 2, 207
   size: 600, 130
   orig: 600, 130
   offset: 0, 0

@@ -2,6 +2,8 @@ package com.ggj16.game.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.ai.msg.MessageManager;
+import com.badlogic.gdx.ai.msg.Telegraph;
 
 public class Utils {
 
@@ -10,5 +12,13 @@ public class Utils {
                 && (Gdx.input.getRotation() == 0 || Gdx.input.getRotation() == 180)
                 || Gdx.input.getNativeOrientation() == Input.Orientation.Portrait
                 && (Gdx.input.getRotation() == 90 || Gdx.input.getRotation() == 270);
+    }
+
+    public static void sendMessage(Telegraph sender, Telegraph receiver, int messageType) {
+        MessageManager.getInstance().dispatchMessage(
+                0.0f,
+                sender,
+                receiver,
+                messageType);
     }
 }

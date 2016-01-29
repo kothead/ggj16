@@ -82,7 +82,6 @@ public class MenuScreen extends BaseScreen {
 
         @Override
         public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-            Gdx.app.log("Test", "touchUp");
             getGame().setGameScreen();
             return super.touchUp(screenX, screenY, pointer, button);
         }
