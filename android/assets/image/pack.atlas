@@ -1,6 +1,6 @@
 
 pack.png
-size: 128,128
+size: 1024,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -9,5 +9,12 @@ test
   xy: 2, 2
   size: 64, 64
   orig: 64, 64
+  offset: 0, 0
+  index: -1
+title
+  rotate: false
+  xy: 2, 70
+  size: 600, 130
+  orig: 600, 130
   offset: 0, 0
   index: -1

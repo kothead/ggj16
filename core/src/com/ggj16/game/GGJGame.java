@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.ggj16.game.data.ImageCache;
 import com.ggj16.game.data.SkinCache;
 import com.ggj16.game.data.SoundCache;
+import com.ggj16.game.screen.GameScreen;
 import com.ggj16.game.screen.MenuScreen;
 
 public class GGJGame extends Game {
@@ -40,5 +41,9 @@ public class GGJGame extends Game {
 
 	public void setMenuScreen() {
 		setScreen(new MenuScreen(this));
+	}
+
+	public void setGameScreen() {
+		setScreen(new GameScreen(this));
 	}
 }
