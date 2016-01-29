@@ -12,6 +12,7 @@ import com.ggj16.game.GGJGame;
 import com.ggj16.game.processor.InputProcessor;
 import com.ggj16.game.processor.ViewProcessor;
 import com.ggj16.game.state.GameStates;
+import com.ggj16.game.view.Floor;
 
 /**
  * Created by kettricken on 30.01.2016.
@@ -24,6 +25,8 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
     float delay = 0; // delete after the real condition of game over is set
 
+    private Floor floor;
+
     public GameScreen(GGJGame game) {
         super(game);
         stage = new Stage(getViewport());
@@ -31,6 +34,8 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
         sm = new DefaultStateMachine(this);
         sm.setInitialState(GameStates.GAME);
+
+        floor = new Floor(16, 10);
     }
 
     @Override
@@ -53,10 +58,14 @@ public class GameScreen extends BaseScreen implements Telegraph {
     @Override
     public void render(float delta) {
         super.render(delta);
-        Gdx.gl.glClearColor( 0, 0, 0, 1 );
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT );
 
         sm.update();
+
+        batch().begin();
+        floor.draw(batch(), 0, 0, (int) getWorldWidth(), (int) getWorldHeight());
+        batch().end();
 
         stage.act(delta);
         stage.draw();
