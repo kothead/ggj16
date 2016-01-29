@@ -102,12 +102,11 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
     public void restart() {
         delay = 0;
-        stage.getActors().clear();
     }
 
     public boolean hasEnded() {
         delay += Gdx.graphics.getDeltaTime();
-        if (delay >= 10) {
+        if (delay >= 2) {
             return true;
         }
         return false;

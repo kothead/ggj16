@@ -66,15 +66,14 @@ public class ViewProcessor {
 
     public void showPauseTable() {
         stage.addActor(pauseTable);
-        pauseTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(1)));
+        pauseTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.25f)));
     }
 
     public void hidePauseTable() {
-        stage.getActors().clear();
+        pauseTable.addAction(Actions.fadeOut(0.25f));
     }
 
     public void showGameOverTable() {
-        stage.getActors().clear();
         stage.addActor(gameOverTable);
         Actor gameOver = gameOverTable.getChildren().get(0);
         final Actor tap = gameOverTable.getChildren().get(1);
@@ -85,11 +84,12 @@ public class ViewProcessor {
                 return false;
             }
         };
+        gameOverTable.addAction(Actions.sequence(Actions.alpha(1)));
         tap.addAction(Actions.sequence(Actions.alpha(0)));
-        gameOver.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(1), act));
+        gameOver.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.25f), act));
     }
 
     public void hideGameOverTable() {
-        stage.getActors().clear();
+        gameOverTable.addAction(Actions.fadeOut(0.25f));
     }
 }

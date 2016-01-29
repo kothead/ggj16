@@ -35,11 +35,13 @@ public enum GameStates implements State<GameScreen> {
     PAUSE() {
         @Override
         public void enter(GameScreen entity) {
+            Gdx.app.log("Test", "PAUSE enter");
             entity.getViewProcessor().showPauseTable();
         }
 
         @Override
         public void exit(GameScreen entity) {
+            Gdx.app.log("Test", "PAUSE exit");
             entity.getViewProcessor().hidePauseTable();
         }
 
@@ -56,11 +58,13 @@ public enum GameStates implements State<GameScreen> {
     GAME_OVER() {
         @Override
         public void enter(GameScreen entity) {
+            Gdx.app.log("Test", "GAME_OVER enter");
             entity.getViewProcessor().showGameOverTable();
         }
 
         @Override
         public void exit(GameScreen entity) {
+            Gdx.app.log("Test", "GAME_OVER exit");
             entity.getViewProcessor().hideGameOverTable();
         }
 
