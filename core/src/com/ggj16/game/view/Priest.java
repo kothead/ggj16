@@ -1,5 +1,6 @@
 package com.ggj16.game.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,9 +14,9 @@ import com.ggj16.game.util.Utils;
 /**
  * Created by kettricken on 30.01.2016.
  */
-public class Priest {
+public abstract class Priest {
 
-    protected static final float SPEED = 200;
+    protected static final float SPEED = 300;
 
     public enum Action {
         NONE, RUN, ACT, IDLE_RUN, ACTING, PANIC
@@ -29,7 +30,9 @@ public class Priest {
         DOWN("priest-down", 2, 0.1f),
         FEAR("priest-fear", 3, 0.2f, Animation.PlayMode.NORMAL),
         FEAR_RUN("priest-fear-run", 3, 0.1f),
-        MAGNET("priest-lasso", 2, 0.1f),
+        MAGNET("priest-magnet", 2, 0.1f),
+        MAGNET_DOWN("priest-magnet-down", 2, 0.1f),
+        MAGNET_UP("priest-magnet-up", 2, 0.1f),
         FALL("priest-fall", 3, 0.1f, Animation.PlayMode.NORMAL),
         CHALK_UP("priest-back", 2, 0.1f),
         CHALK_LEFT("priest-chalk-left", 2, 0.1f),
@@ -121,6 +124,7 @@ public class Priest {
     }
 
     protected void setState(State state) {
+        Gdx.app.log("STATE", state.name());
         if (this.state != state) {
             this.state = state;
             stateTime = 0;
@@ -195,6 +199,10 @@ public class Priest {
     public void setTarget(Action action, float x, float y) {
         // calculate speed pixel per second
         if (action != Action.NONE) {
+            this.action = action;
+            targetX = x;
+            targetY = y;
+
             float diffX = x - getX();
             float diffY = y - getY();
             float path = (float) Math.sqrt(diffX * diffX + diffY * diffY);
@@ -204,62 +212,12 @@ public class Priest {
 
                 Direction direction = Direction.getByOffset(Math.abs(vx) >= Math.abs(vy) ? Math.signum(vx) : 0,
                         Math.abs(vy) > Math.abs(vx) ? Math.signum(vy) : 0);
-                switch (action) {
-                    case ACT:
-                        switch (direction) {
-                            case DOWN:
-                                setState(State.CHALK_DOWN);
-                                break;
-
-                            case LEFT:
-                                setState(State.CHALK_LEFT);
-                                break;
-
-                            case RIGHT:
-                                setState(State.CHALK_RIGHT);
-                                break;
-
-                            case UP:
-                                setState(State.CHALK_UP);
-                                break;
-                        }
-                        break;
-
-                    case IDLE_RUN:
-                    case RUN:
-                        switch (direction) {
-                            case DOWN:
-                                setState(State.DOWN);
-                                break;
-
-                            case LEFT:
-                                setState(State.LEFT);
-                                break;
-
-                            case RIGHT:
-                                setState(State.RIGHT);
-                                break;
-
-                            case UP:
-                                setState(State.UP);
-                                break;
-                        }
-                        break;
-
-                    case PANIC:
-                        setState(State.FEAR_RUN);
-                        break;
-
-                    case NONE:
-                        setState(State.STAND);
-                        break;
-                }
+                updateStateForDirection(direction);
             }
-            this.action = action;
-            targetX = x;
-            targetY = y;
         }
     }
+
+    protected abstract void updateStateForDirection(Direction direction);
 
     public float getCenterX() {
         return x + getWidth() / 2;
