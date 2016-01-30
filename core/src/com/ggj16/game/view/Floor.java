@@ -55,8 +55,6 @@ public class Floor {
 
         initFloor();
 
-        Gdx.app.log("Test", "tileWidth " + tileWidth + " getHeightInPixels " + getHeightInPixels());
-
         visible = new Rectangle(tileWidth * 2, tileHeight * 2, getWidthInPixels() - tileWidth * 3, getHeightInPixels() - tileHeight * 3);
     }
 

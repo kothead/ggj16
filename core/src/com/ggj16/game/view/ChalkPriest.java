@@ -176,5 +176,57 @@ public class ChalkPriest extends Priest {
         }
     }
 
+    @Override
+    protected void updateStateForDirection(Direction direction) {
+        switch (getAction()) {
+            case ACT:
+                switch (direction) {
+                    case DOWN:
+                        setState(State.CHALK_DOWN);
+                        break;
 
+                    case LEFT:
+                        setState(State.CHALK_LEFT);
+                        break;
+
+                    case RIGHT:
+                        setState(State.CHALK_RIGHT);
+                        break;
+
+                    case UP:
+                        setState(State.CHALK_UP);
+                        break;
+                }
+                break;
+
+            case IDLE_RUN:
+            case RUN:
+                switch (direction) {
+                    case DOWN:
+                        setState(State.DOWN);
+                        break;
+
+                    case LEFT:
+                        setState(State.LEFT);
+                        break;
+
+                    case RIGHT:
+                        setState(State.RIGHT);
+                        break;
+
+                    case UP:
+                        setState(State.UP);
+                        break;
+                }
+                break;
+
+            case PANIC:
+                setState(State.FEAR_RUN);
+                break;
+
+            case NONE:
+                setState(State.STAND);
+                break;
+        }
+    }
 }

@@ -218,8 +218,6 @@ public class GameScreen extends BaseScreen implements Telegraph {
                 return false;
             }
 
-            Gdx.app.log("Test", "action " + player.getAction());
-
             if (player.getAction() == Player.Action.TRAPPED) {
                 trappedCount++;
                 if (trappedCount >= GET_LOOSE_COUNT) {

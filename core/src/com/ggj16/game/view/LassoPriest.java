@@ -1,5 +1,6 @@
 package com.ggj16.game.view;
 
+import com.ggj16.game.model.Direction;
 import com.ggj16.game.screen.GameScreen;
 import com.ggj16.game.util.Utils;
 
@@ -7,7 +8,6 @@ import com.ggj16.game.util.Utils;
  * Created by kettricken on 30.01.2016.
  */
 public class LassoPriest extends Priest {
-
 
     private static final float VISIBILITY_DISTANCE = 500;
     private static final float LASSO_DISTANCE = 60;
@@ -86,6 +86,37 @@ public class LassoPriest extends Priest {
 
         } else if (action == Action.NONE) {
             setRandomTargetPosition(Action.IDLE_RUN);
+        } else if (action == Action.ACTING) {
+            setState(State.MAGNET);
+        }
+    }
+
+    @Override
+    protected void updateStateForDirection(Direction direction) {
+        switch (getAction()) {
+            case IDLE_RUN:
+            case RUN:
+            case ACT:
+                switch (direction) {
+                    case DOWN:
+                    case LEFT:
+                    case RIGHT:
+                        setState(State.MAGNET_DOWN);
+                        break;
+
+                    case UP:
+                        setState(State.MAGNET_UP);
+                        break;
+                }
+                break;
+
+            case PANIC:
+                setState(State.FEAR_RUN);
+                break;
+
+            case NONE:
+                setState(State.STAND);
+                break;
         }
     }
 }

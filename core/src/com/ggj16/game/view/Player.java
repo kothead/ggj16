@@ -146,7 +146,6 @@ public class Player {
         }
 
         // calculate speed pixel per second
-        Gdx.app.log("Test", "action " + action);
         if (action == Action.TRAPPED && state != State.TRAPPED) {
             setState(State.TRAPPED);
         } else if (this.action == Action.TRAPPED) {
