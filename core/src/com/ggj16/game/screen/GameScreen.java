@@ -9,9 +9,12 @@ import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.ggj16.game.GGJGame;
 import com.ggj16.game.processor.InputProcessor;
 import com.ggj16.game.processor.PriestProcessor;
@@ -26,6 +29,7 @@ import com.ggj16.game.view.Player;
 public class GameScreen extends BaseScreen implements Telegraph {
 
     private Stage stage;
+    private OrthographicCamera stageCamera;
     private ViewProcessor viewProcessor;
     private StateMachine sm;
 
@@ -39,7 +43,9 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
     public GameScreen(GGJGame game) {
         super(game);
-        stage = new Stage(getViewport());
+        stageCamera = new OrthographicCamera();
+        Viewport viewport = new ExtendViewport(getWorldWidth(), getWorldHeight(), stageCamera);
+        stage = new Stage(viewport);
         viewProcessor = new ViewProcessor(this, stage);
 
         sm = new DefaultStateMachine(this);
@@ -50,7 +56,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
         player.setX(floor.getWidthInPixels() / 2);
         player.setY(floor.getHeightInPixels() / 2);
 
-        priestProcessor = new PriestProcessor(floor);
+        priestProcessor = new PriestProcessor(floor, this);
         priestProcessor.generatePriests(4);
     }
 
@@ -69,7 +75,6 @@ public class GameScreen extends BaseScreen implements Telegraph {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        stage.setViewport(getViewport());
     }
 
     @Override
@@ -174,6 +179,10 @@ public class GameScreen extends BaseScreen implements Telegraph {
         getCamera().position.y = y;
         getCamera().update();
         batch().setProjectionMatrix(getCamera().combined);
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     private class ControlProcess extends InputAdapter {

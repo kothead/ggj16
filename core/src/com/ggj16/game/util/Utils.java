@@ -38,4 +38,9 @@ public class Utils {
         double shifted = scaled + min;
         return (float) shifted; // == (rand.nextDouble() * (max-min)) + min;
     }
+
+    public static float getDistance(float x, float y, float x1, float y1) {
+        float distance = (float) Math.sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1));
+        return distance;
+    }
 }

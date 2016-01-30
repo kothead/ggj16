@@ -16,7 +16,7 @@ public class Priest {
     protected static final float SPEED = 200;
 
     public enum Action {
-        NONE, RUN, ACT, IDLE_RUN
+        NONE, RUN, ACT, IDLE_RUN, ACTING
     }
 
     enum State {

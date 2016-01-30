@@ -1,5 +1,6 @@
 package com.ggj16.game.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -53,7 +54,9 @@ public class Floor {
             }
         }
 
-        visible = new Rectangle(tileWidth, tileHeight, getWidthInPixels() - tileWidth * 2, getHeightInPixels() - tileHeight * 2);
+        Gdx.app.log("Test", "tileWidth " + tileWidth + " getHeightInPixels " + getHeightInPixels());
+
+        visible = new Rectangle(tileWidth * 2, tileHeight * 2, getWidthInPixels() - tileWidth * 3, getHeightInPixels() - tileHeight * 3);
     }
 
     public void process(float delta) {
@@ -82,6 +85,7 @@ public class Floor {
 
     public void draw(Batch batch, int offsetX, int offsetY, int screenWidth, int screenHeight) {
         // calculate viewport size
+        Gdx.app.log("Test", "OffsetY " + offsetY);
         int startX = (offsetX / tileWidth - 1) * tileWidth;
         int startY = offsetY - tileHeight;
         int endX = offsetX + screenWidth + tileWidth;

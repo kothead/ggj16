@@ -3,6 +3,7 @@ package com.ggj16.game.processor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
+import com.ggj16.game.screen.GameScreen;
 import com.ggj16.game.view.ChalkPriest;
 import com.ggj16.game.view.Floor;
 import com.ggj16.game.view.LassoPriest;
@@ -15,9 +16,11 @@ public class PriestProcessor {
 
     Array<Priest> priests = new Array<Priest>();
     Floor floor;
+    GameScreen gameScreen;
 
-    public PriestProcessor(Floor floor) {
+    public PriestProcessor(Floor floor, GameScreen gameScreen) {
         this.floor = floor;
+        this.gameScreen = gameScreen;
     }
 
     public void update(float delta) {
@@ -42,7 +45,7 @@ public class PriestProcessor {
 //            priests.add(priest);
 //        }
         for (int i = 0; i < 1; i++) {
-            LassoPriest priest = new LassoPriest(floor);
+            LassoPriest priest = new LassoPriest(floor, gameScreen);
             priests.add(priest);
         }
     }

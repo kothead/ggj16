@@ -1,6 +1,5 @@
 package com.ggj16.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,6 +12,10 @@ import com.ggj16.game.data.ImageCache;
 public class Player {
 
     private static final float SPEED = 600;
+
+    public void caught() {
+        //TODO: implement
+    }
 
     public enum Action {
         NONE, GO, SCARE, BREAK_FLOOR

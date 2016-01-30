@@ -1,5 +1,6 @@
 package com.ggj16.game.view;
 
+import com.ggj16.game.screen.GameScreen;
 import com.ggj16.game.util.Utils;
 
 /**
@@ -8,8 +9,16 @@ import com.ggj16.game.util.Utils;
 public class LassoPriest extends Priest {
 
 
-    public LassoPriest(Floor floor) {
+    private static final float VISIBILITY_DISTANCE = 500;
+    private static final float LASSO_DISTANCE = 250;
+    private static final float ACTING_TIME = 2;
+    GameScreen gameScreen;
+
+    float actingTimer = 0;
+
+    public LassoPriest(Floor floor, GameScreen gameScreen) {
         super(floor);
+        this.gameScreen = gameScreen;
         setInitialPosition();
         setRandomTargetPosition();
     }
@@ -18,6 +27,28 @@ public class LassoPriest extends Priest {
     public void process(float delta) {
         super.process(delta);
         super.updatePosition(delta);
+        if (getAction() == Action.IDLE_RUN) {
+            Player player = gameScreen.getPlayer();
+            float distance = Utils.getDistance(getX(), getY(), player.getX(), player.getY());
+            if (distance < VISIBILITY_DISTANCE) {
+                setTarget(Action.ACT, player.getX(), player.getY());
+            }
+        } else if (getAction() == Action.ACT) {
+            Player player = gameScreen.getPlayer();
+            float distance = Utils.getDistance(getX(), getY(), player.getX(), player.getY());
+            if (distance <= LASSO_DISTANCE) {
+                setAction(Action.ACTING);
+                player.caught();
+            } else if (distance > VISIBILITY_DISTANCE) {
+                setRandomTargetPosition();
+            }
+        } else if (getAction() == Action.ACTING) {
+            actingTimer += delta;
+            if (actingTimer >= ACTING_TIME) {
+                actingTimer = 0;
+                setRandomTargetPosition();
+            }
+        }
     }
 
     private void setInitialPosition() {
@@ -47,20 +78,12 @@ public class LassoPriest extends Priest {
         setPosition(x, y);
     }
 
-//    public void setAction(Action action) {
-//        super.setAction(action);
-//        if (action == Action.ACT) {
-//            startDrawing();
-//            int random = Utils.randInt(0, 3);
-//            if (random != 0) {
-//                setActTargetPosition();
-//            } else {
-//                setRandomTargetPosition();
-//            }
-//        } else if (action == Action.NONE) {
-//            getFloor().cut(chalkLine);
-//            chalkLine = null;
-//            initNewSequence(false);
-//        }
-//    }
+    public void setAction(Action action) {
+        super.setAction(action);
+        if (action == Action.ACT) {
+
+        } else if (action == Action.NONE) {
+            setRandomTargetPosition();
+        }
+    }
 }
