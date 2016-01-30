@@ -20,7 +20,7 @@ public class LassoPriest extends Priest {
         super(floor);
         this.gameScreen = gameScreen;
         setInitialPosition();
-        setRandomTargetPosition();
+        setRandomTargetPosition(Action.IDLE_RUN);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class LassoPriest extends Priest {
                 setAction(Action.ACTING);
                 player.setTrapped();
             } else if (distance > VISIBILITY_DISTANCE) {
-                setRandomTargetPosition();
+                setRandomTargetPosition(Action.IDLE_RUN);
             }
         } else if (getAction() == Action.ACTING) {
             actingTimer += delta;
@@ -48,7 +48,7 @@ public class LassoPriest extends Priest {
                 actingTimer = 0;
                 Player player = gameScreen.getPlayer();
                 player.release();
-                setRandomTargetPosition();
+                setRandomTargetPosition(Action.IDLE_RUN);
             }
         }
     }
@@ -85,7 +85,7 @@ public class LassoPriest extends Priest {
         if (action == Action.ACT) {
 
         } else if (action == Action.NONE) {
-            setRandomTargetPosition();
+            setRandomTargetPosition(Action.IDLE_RUN);
         }
     }
 }

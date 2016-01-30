@@ -18,7 +18,7 @@ public class Priest {
     protected static final float SPEED = 200;
 
     public enum Action {
-        NONE, RUN, ACT, IDLE_RUN, ACTING
+        NONE, RUN, ACT, IDLE_RUN, ACTING, PANIC
     }
 
     enum State {
@@ -93,6 +93,8 @@ public class Priest {
     private Rectangle boundingBox = new Rectangle();
 
     private Action action = Action.RUN;
+
+    private float panicTime = 0;
 
     public Priest(Floor floor) {
         this.floor = floor;
@@ -188,8 +190,8 @@ public class Priest {
         }
     }
 
-    public void scare() {
-        setRandomTargetPosition();
+    public void panicStrike() {
+        setRandomTargetPosition(Action.PANIC);
     }
 
     public void fall() {
@@ -226,10 +228,10 @@ public class Priest {
         }
     }
 
-    public void setRandomTargetPosition() {
+    public void setRandomTargetPosition(Action action) {
         float posX = Utils.randomFloat(getFloor().getVisibleLeft(), getFloor().getVisibleRight());
         float posY = Utils.randomFloat(getFloor().getVisibleBottom(), getFloor().getVisibleTop());
-        setTarget(Action.IDLE_RUN, posX, posY);
+        setTarget(action, posX, posY);
     }
 
     public Rectangle getBoundingBox() {

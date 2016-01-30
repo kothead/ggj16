@@ -2,6 +2,7 @@ package com.ggj16.game.processor;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.ggj16.game.screen.GameScreen;
 import com.ggj16.game.view.ChalkPriest;
@@ -14,6 +15,8 @@ import com.ggj16.game.view.Priest;
  */
 public class PriestProcessor {
 
+    private static final int PANIC_HALF_WIDTH = 200;
+    private static final int PANIC_HALF_HEIGHT = 200;
     Array<Priest> priests = new Array<Priest>();
     Floor floor;
     GameScreen gameScreen;
@@ -39,11 +42,11 @@ public class PriestProcessor {
     }
 
     public void generatePriests(int amount) {
-//        for (int i = 0; i < amount; i++) {
-//            ChalkPriest priest = new ChalkPriest(floor);
-//            priest.startDrawing();
-//            priests.add(priest);
-//        }
+        for (int i = 0; i < amount; i++) {
+            ChalkPriest priest = new ChalkPriest(floor);
+            priest.startDrawing();
+            priests.add(priest);
+        }
         for (int i = 0; i < 1; i++) {
             LassoPriest priest = new LassoPriest(floor, gameScreen);
             priests.add(priest);
@@ -72,7 +75,13 @@ public class PriestProcessor {
     }
 
     public void panic(float x, float y) {
-
+        Rectangle panicAttack = new Rectangle(x - PANIC_HALF_WIDTH, y - PANIC_HALF_HEIGHT,
+                PANIC_HALF_WIDTH * 2, PANIC_HALF_HEIGHT * 2);
+        for (Priest priest: priests) {
+            if (panicAttack.contains(priest.getX(), priest.getY())) {
+                priest.panicStrike();
+            }
+        }
     }
 
     public void clear() {

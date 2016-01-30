@@ -77,7 +77,7 @@ public class ChalkPriest extends Priest {
             if (random != 0) {
                 setActTargetPosition();
             } else {
-                setRandomTargetPosition();
+                setRandomTargetPosition(Action.IDLE_RUN);
             }
         } else if (action == Action.NONE) {
             getFloor().cut(chalkLine);
