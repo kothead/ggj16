@@ -27,9 +27,11 @@ public class Floor {
     private Rectangle visible;
 
     public Floor(int width, int height) {
-        this.width = width + 2;
-        this.height = height + 2;
-        tiles = new float[this.height][this.width];
+        width += 2;
+        height += 2;
+        this.width = width;
+        this.height = height;
+        tiles = new float[height][width];
 
         textureFloor = ImageCache.getTexture(TEXTURE_FLOOR);
         texturePit = ImageCache.getTexture(TEXTURE_PIT);
