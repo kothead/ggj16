@@ -1,5 +1,6 @@
 package com.ggj16.game.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -10,8 +11,8 @@ import com.ggj16.game.data.ImageCache;
  */
 public class Floor {
 
-	private static final float FALL_SPEED = 100;
-    private static final float RISE_SPEED = 50;
+	private static final float FALL_SPEED = 10;
+    private static final float RISE_SPEED = 3;
     private static final int MAX_FALLEN_TILES = 3;
     private static final String TEXTURE_FLOOR = "floor";
     private static final String TEXTURE_PIT = "pit";
@@ -49,7 +50,7 @@ public class Floor {
     }
 
     public void process(float delta) {
-        for (int i = 0; i < falling.size; i++) {
+        for (int i = 0; i < falling.size; i += 2) {
             int x = falling.get(i);
             int y = falling.get(i + 1);
             if (tiles[y][x] > INVISIBLE) {
@@ -58,7 +59,7 @@ public class Floor {
             }
         }
 
-        for (int i = 0; i < rising.size; i++) {
+        for (int i = 0; i < rising.size; i += 2) {
             int x = rising.get(i);
             int y = rising.get(i + 1);
             if (tiles[y][x] < VISIBLE) {
@@ -75,36 +76,37 @@ public class Floor {
     public void draw(Batch batch, int offsetX, int offsetY, int screenWidth, int screenHeight) {
         // calculate viewport size
         int startX = (offsetX / tileWidth - 1) * tileWidth;
-        int startY = (offsetY / tileHeight - 1) * tileHeight;
+        int startY = offsetY - tileHeight;
         int endX = offsetX + screenWidth + tileWidth;
-        int endY = offsetY + screenHeight + tileHeight;
+        int endY = (offsetY + screenHeight) / tileHeight * (tileHeight + 1);
 
-        for (int i = startY; i < endY; i += tileHeight) {
+        for (int i = endY; i >= startY; i -= tileHeight) {
             for (int j = startX; j < endX; j += tileWidth) {
                 int tiley = i / tileHeight;
                 int tilex = j / tileWidth;
                 if (tiley < height && tiley >= 0
-                        && tilex < width && tilex >= 0
-                        && tiles[tiley][tilex] == VISIBLE) {
-                    batch.draw(textureFloor, j, i, tileWidth, tileHeight);
+                        && tilex < width && tilex >= 0) {
+
+                    float visibility = tiles[tiley][tilex];
+                    if (visibility > INVISIBLE) {
+                        batch.draw(textureFloor, j, i + tileHeight * (visibility - VISIBLE), tileWidth, tileHeight);
+                    }
                 }
             }
         }
     }
 
-    public void dropTile(int x, int y) {
-        x /= tileWidth;
-        y /= tileHeight;
+    public void dropTile(float posx, float posy) {
+        int x = (int) (posx / tileWidth);
+        int y = (int) (posy / tileHeight);
 
-        falling.add(x);
-        falling.add(y);
-        while (falling.size * 2 > MAX_FALLEN_TILES) {
-            int fallenx = falling.get(0);
-            int falleny = falling.get(1);
-            falling.removeIndex(0);
-            falling.removeIndex(0);
-            rising.add(x);
-            rising.add(y);
+        if (tiles[y][x] > INVISIBLE) {
+            falling.add(x);
+            falling.add(y);
+            while (falling.size > MAX_FALLEN_TILES * 2) {
+                rising.add(falling.removeIndex(0));
+                rising.add(falling.removeIndex(0));
+            }
         }
     }
 
@@ -122,5 +124,13 @@ public class Floor {
 
     public int getHeightInTiles() {
         return height;
+    }
+
+    public int getTileWidth() {
+        return tileWidth;
+    }
+
+    public int getTileHeight() {
+        return tileHeight;
     }
 }

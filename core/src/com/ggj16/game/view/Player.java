@@ -1,7 +1,6 @@
 package com.ggj16.game.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -57,6 +56,14 @@ public class Player {
         this.floor = floor;
     }
 
+    public int getWidth() {
+        return getStateFrame().getRegionWidth();
+    }
+
+    public int getHeight() {
+        return getStateFrame().getRegionHeight();
+    }
+
     public float getX() {
         return x;
     }
@@ -87,11 +94,10 @@ public class Player {
             if (path > 0) {
                 vx = diffX / path * SPEED;
                 vy = diffY / path * SPEED;
-
-                this.action = action;
-                targetX = x;
-                targetY = y;
             }
+            this.action = action;
+            targetX = x;
+            targetY = y;
         }
     }
 
@@ -106,7 +112,7 @@ public class Player {
                     break;
 
                 case BREAK_FLOOR:
-                    floor.dropTile(x, y);
+                    floor.dropTile(x + getWidth() / 2, y + getHeight() / 2);
                     break;
             }
             action = Action.NONE;
@@ -141,7 +147,7 @@ public class Player {
      * @return whether target is reached or not
      */
     private boolean updatePosition(float delta) {
-        if (vx != 0 || vy != 0) {
+        if (action != Action.NONE) {
             setPosition(getX() + vx * delta, getY() + vy * delta);
             float diffX = x - targetX;
             float diffY = y - targetY;

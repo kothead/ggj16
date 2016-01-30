@@ -72,6 +72,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
         sm.update();
         stage.act(delta);
         player.process(delta);
+        floor.process(delta);
         updateCameraPosition();
 
         // drawing block
@@ -136,7 +137,6 @@ public class GameScreen extends BaseScreen implements Telegraph {
             x = halfWidth;
         } else if (x + halfWidth > floor.getWidthInPixels()) {
             x = floor.getWidthInPixels() - halfWidth;
-            Gdx.app.log("WIDTH", floor.getWidthInPixels() + " " + halfWidth + " " + x);
         }
 
         if (y - halfHeight < 0) {
@@ -153,10 +153,6 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
     private class ControlProcess extends InputAdapter {
 
-        private static final float DOUBLE_TAP_DELAY = 0.5f;
-
-        private float tapTime;
-
         @Override
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
             Camera camera = getCamera();
@@ -169,9 +165,17 @@ public class GameScreen extends BaseScreen implements Telegraph {
             getCamera().unproject(pos);
 
             if (player.getBoundingBox().contains(pos.x, pos.y)) {
-                player.setTarget(Player.Action.BREAK_FLOOR, pos.x, pos.y);
+                int tileWidth = floor.getTileWidth();
+                int tileHeight = floor.getTileHeight();
+                int tilex = (int) (pos.x / tileWidth);
+                int tiley = (int) (pos.y / tileHeight);
+                player.setTarget(Player.Action.BREAK_FLOOR,
+                        tilex * tileWidth + (tileWidth - player.getWidth()) / 2,
+                        tiley * tileHeight + (tileHeight - player.getHeight()) / 2);
             } else {
-                player.setTarget(Player.Action.GO, pos.x, pos.y);
+                player.setTarget(Player.Action.GO,
+                        pos.x - player.getWidth() / 2,
+                        pos.y - player.getHeight() / 2);
             }
             return super.touchDown(screenX, screenY, pointer, button);
         }
