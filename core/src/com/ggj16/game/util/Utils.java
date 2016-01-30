@@ -9,6 +9,8 @@ import java.util.Random;
 
 public class Utils {
 
+    private static Random rand = new Random(100);
+
     public static boolean isLandscape() {
         return Gdx.input.getNativeOrientation() == Input.Orientation.Landscape
                 && (Gdx.input.getRotation() == 0 || Gdx.input.getRotation() == 180)
@@ -25,10 +27,15 @@ public class Utils {
     }
 
     public static int randInt(int min, int max) {
-        Random rand = new Random(100);
-
         int randomNum = rand.nextInt((max - min) + 1) + min;
 
         return randomNum;
+    }
+
+    public static float randomFloat(double min, double max) {
+        double range = max - min;
+        double scaled = rand.nextDouble() * range;
+        double shifted = scaled + min;
+        return (float) shifted; // == (rand.nextDouble() * (max-min)) + min;
     }
 }

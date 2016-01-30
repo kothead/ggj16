@@ -51,7 +51,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
         player.setY(floor.getHeightInPixels() / 2);
 
         priestProcessor = new PriestProcessor(floor);
-        priestProcessor.generatePriest();
+        priestProcessor.generatePriests(4);
     }
 
     @Override
@@ -94,12 +94,18 @@ public class GameScreen extends BaseScreen implements Telegraph {
                 (int) (getCamera().position.y - getCamera().viewportHeight / 2),
                 (int) getWorldWidth(), (int) getWorldHeight());
         player.draw(batch(), delta);
-        priestProcessor.draw(batch());
         batch().end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         // draw line
         priestProcessor.draw(shapeRenderer);
+        shapeRenderer.end();
+
+        batch().begin();
+        priestProcessor.draw(batch());
+        batch().end();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         // draw fog
         floor.draw(shapeRenderer, 0, 0, (int) getWorldWidth(), (int) getWorldHeight());
         shapeRenderer.end();
@@ -155,7 +161,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
             x = halfWidth;
         } else if (x + halfWidth > floor.getWidthInPixels()) {
             x = floor.getWidthInPixels() - halfWidth;
-            Gdx.app.log("WIDTH", floor.getWidthInPixels() + " " + halfWidth + " " + x);
+            //Gdx.app.log("WIDTH", floor.getWidthInPixels() + " " + halfWidth + " " + x);
         }
 
         if (y - halfHeight < 0) {

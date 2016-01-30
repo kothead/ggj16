@@ -9,52 +9,80 @@ import com.ggj16.game.util.Utils;
  */
 public class ChalkPriest extends Priest {
 
+    public enum Side {
+        LEFT, RIGHT, TOP, BOTTOM
+    }
 
-    private Floor floor;
     private ChalkLine chalkLine;
 
     public ChalkPriest(Floor floor) {
-        super();
-        this.floor = floor;
-        this.direction = Direction.getDirections()[Utils.randInt(0, 4)];
-        int side = Utils.randInt(0, 2);
-        switch (direction) {
-            case UP:
-                setX(floor.getWidthInPixels() / 2);
-                setY(floor.getVisibleBottom() - floor.getTileHeight());
-                if (side == 0){
-                    setTarget(Action.RUN, floor.getVisibleLeft() + floor.getCutWidth() - getWidth() / 2, floor.getVisibleBottom());
-                } else {
-                    setTarget(Action.RUN, floor.getVisibleRight() - floor.getCutWidth() - getWidth() / 2, floor.getVisibleBottom());
+        super(floor);
+        initNewSequence(true);
+    }
+
+    private void initNewSequence(boolean setInitialPosition) {
+        if (getFloor().isPentagramCircled()) {
+            return;
+        }
+
+        int random = Utils.randInt(0, 5);
+        Side side = Side.values()[Utils.randInt(0, 3)];
+        if (random == 0 || random == 1) {
+            this.direction = Direction.getDirections()[Utils.randInt(0, 3)];
+        } else {
+            if (getFloor().getVisibleWidthInPixels() > getFloor().getVisibleHeightInPixels()) {
+                this.direction = Direction.getDirections()[Utils.randInt(2, 3)];
+                if (getFloor().getLeftVisibleWidth() > getFloor().getRightVisibleWidth()) {
+                    side = Side.LEFT;
+                } else if (getFloor().getLeftVisibleWidth() < getFloor().getRightVisibleWidth()) {
+                    side = Side.RIGHT;
                 }
-                break;
-            case DOWN:
-                setX(floor.getWidthInPixels() / 2);
-                setY(floor.getVisibleTop() + floor.getTileHeight());
-                if (side == 0){
-                    setTarget(Action.RUN, floor.getVisibleLeft() + floor.getCutWidth() - getWidth() / 2, floor.getVisibleTop());
-                } else {
-                    setTarget(Action.RUN, floor.getVisibleRight() - floor.getCutWidth() - getWidth() / 2, floor.getVisibleTop());
+            } else if (getFloor().getVisibleWidthInPixels() < getFloor().getVisibleHeightInPixels()) {
+                this.direction = Direction.getDirections()[Utils.randInt(0, 1)];
+                if (getFloor().getTopVisibleHeight() > getFloor().getBottomVisibleHeight()) {
+                    side = Side.TOP;
+                } else if (getFloor().getTopVisibleHeight() < getFloor().getBottomVisibleHeight()) {
+                    side = Side.BOTTOM;
                 }
-                break;
-            case LEFT:
-                setX((int) (floor.getVisibleRight() + floor.getTileWidth()));
-                setY(floor.getHeightInPixels() / 2);
-                if (side == 0){
-                    setTarget(Action.RUN, floor.getVisibleRight(), floor.getVisibleTop() - floor.getCutWidth() - getHeight() / 2);
-                } else {
-                    setTarget(Action.RUN, floor.getVisibleRight(), floor.getVisibleBottom() + floor.getCutWidth() - getHeight() / 2);
-                }
-                break;
-            case RIGHT:
-                setX((int) (floor.getVisibleLeft() - floor.getTileWidth()));
-                setY(floor.getHeightInPixels() / 2);
-                if (side == 0){
-                    setTarget(Action.RUN, floor.getVisibleLeft(), floor.getVisibleTop() - floor.getCutWidth() - getHeight() / 2);
-                } else {
-                    setTarget(Action.RUN, floor.getVisibleLeft(), floor.getVisibleBottom() + floor.getCutWidth() - getHeight() / 2);
-                }
-                break;
+            } else {
+                this.direction = Direction.getDirections()[Utils.randInt(0, 3)];
+            }
+        }
+        if (setInitialPosition)
+            setInitialPosition();
+        setRunTargetPosition(side);
+    }
+
+    @Override
+    public void process(float delta) {
+        super.process(delta);
+        super.updatePosition(delta);
+        if (getAction() == Action.ACT) {
+            chalkLine.increase(SPEED * delta * direction.getDx(), SPEED * delta * direction.getDy());
+        }
+    }
+
+    @Override
+    public void draw(ShapeRenderer shapeRenderer) {
+        if (chalkLine != null) {
+            chalkLine.draw(shapeRenderer);
+        }
+    }
+
+    public void setAction(Action action) {
+        super.setAction(action);
+        if (action == Action.ACT) {
+            startDrawing();
+            int random = Utils.randInt(0, 3);
+            if (random != 0) {
+                setActTargetPosition();
+            } else {
+                setRandomTargetPosition();
+            }
+        } else if (action == Action.NONE) {
+            getFloor().cut(chalkLine);
+            chalkLine = null;
+            initNewSequence(false);
         }
     }
 
@@ -70,52 +98,82 @@ public class ChalkPriest extends Priest {
                 break;
         }
 
-    };
+    }
 
-    public void process(float delta) {
-        super.process(delta);
-        super.updatePosition(delta);
-        if (getAction() == Action.ACT) {
-            chalkLine.increase(SPEED * delta * direction.getDx(), SPEED * delta * direction.getDy());
-        } else if (getAction() == Action.NONE) {
-
+    private void setInitialPosition() {
+        switch (direction) {
+            case UP:
+                setX(getFloor().getWidthInPixels() / 2);
+                setY(getFloor().getVisibleBottom() - getFloor().getTileHeight());
+                break;
+            case DOWN:
+                setX(getFloor().getWidthInPixels() / 2);
+                setY(getFloor().getVisibleTop() + getFloor().getTileHeight());
+                break;
+            case LEFT:
+                setX(getFloor().getVisibleRight() + getFloor().getTileWidth());
+                setY(getFloor().getHeightInPixels() / 2);
+                break;
+            case RIGHT:
+                setX(getFloor().getVisibleLeft() - getFloor().getTileWidth());
+                setY(getFloor().getHeightInPixels() / 2);
+                break;
         }
     }
 
-    @Override
-    public void draw(ShapeRenderer shapeRenderer) {
-        chalkLine.draw(shapeRenderer);
-    }
-
-    public ChalkLine getChalkLine() {
-        return chalkLine;
-    }
-
-    public void setAction(Action action) {
-        super.setAction(action);
-        if (action == Action.ACT) {
-            switch (direction) {
-                case UP:
-                    startDrawing();
-                    setTarget(Action.ACT, getX(), floor.getVisibleTop());
-                    break;
-                case DOWN:
-                    startDrawing();
-                    setTarget(Action.ACT, getX(), floor.getVisibleBottom() - floor.getTileHeight());
-                    break;
-                case LEFT:
-                    startDrawing();
-                    setTarget(Action.ACT, floor.getVisibleLeft() - floor.getTileWidth(), getY());
-                    break;
-                case RIGHT:
-                    startDrawing();
-                    setTarget(Action.ACT, floor.getVisibleRight(), getY());
-                    break;
-            }
-        } else if (action == Action.NONE) {
-            floor.cut(chalkLine);
+    private void setRunTargetPosition(Side side) {
+        switch (direction) {
+            case UP:
+                if (side == Side.LEFT){
+                    setTarget(Action.RUN, getFloor().getVisibleLeft() + getFloor().getCutWidth() - getWidth() / 2, getFloor().getVisibleBottom());
+                } else {
+                    setTarget(Action.RUN, getFloor().getVisibleRight() - getFloor().getCutWidth() - getWidth() / 2, getFloor().getVisibleBottom());
+                }
+                break;
+            case DOWN:
+                if (side == Side.LEFT){
+                    setTarget(Action.RUN, getFloor().getVisibleLeft() + getFloor().getCutWidth() - getWidth() / 2, getFloor().getVisibleTop());
+                } else {
+                    setTarget(Action.RUN, getFloor().getVisibleRight() - getFloor().getCutWidth() - getWidth() / 2, getFloor().getVisibleTop());
+                }
+                break;
+            case LEFT:
+                if (side == Side.TOP){
+                    setTarget(Action.RUN, getFloor().getVisibleRight(), getFloor().getVisibleTop() - getFloor().getCutWidth() - getHeight() / 2);
+                } else {
+                    setTarget(Action.RUN, getFloor().getVisibleRight(), getFloor().getVisibleBottom() + getFloor().getCutWidth() - getHeight() / 2);
+                }
+                break;
+            case RIGHT:
+                if (side == Side.TOP){
+                    setTarget(Action.RUN, getFloor().getVisibleLeft(), getFloor().getVisibleTop() - getFloor().getCutWidth() - getHeight() / 2);
+                } else {
+                    setTarget(Action.RUN, getFloor().getVisibleLeft(), getFloor().getVisibleBottom() + getFloor().getCutWidth() - getHeight() / 2);
+                }
+                break;
         }
     }
 
+    private void setActTargetPosition() {
+        switch (direction) {
+            case UP:
+                setTarget(Action.ACT, getX(), getFloor().getVisibleTop());
+                break;
+            case DOWN:
+                setTarget(Action.ACT, getX(), getFloor().getVisibleBottom() - getFloor().getTileHeight());
+                break;
+            case LEFT:
+                setTarget(Action.ACT, getFloor().getVisibleLeft() - getFloor().getTileWidth(), getY());
+                break;
+            case RIGHT:
+                setTarget(Action.ACT, getFloor().getVisibleRight(), getY());
+                break;
+        }
+    }
 
+    private void setRandomTargetPosition() {
+        float posX = Utils.randomFloat(getFloor().getVisibleLeft(), getFloor().getVisibleRight());
+        float posY = Utils.randomFloat(getFloor().getVisibleBottom(), getFloor().getVisibleTop());
+        setTarget(Action.IDLE_RUN, posX, posY);
+    }
 }

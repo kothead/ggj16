@@ -10,8 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
  * directions by offset (getByOffset(dx, dy) method)
  */
 public enum Direction {
-    LEFT(-1, 0), UP(0, 1),
-    RIGHT(1, 0), DOWN(0, -1);
+    LEFT(-1, 0), RIGHT(1, 0), UP(0, 1), DOWN(0, -1);
 
     private static final float SEGMENT_ANGLE = MathUtils.PI / 4f;
     private static Direction[] directions;

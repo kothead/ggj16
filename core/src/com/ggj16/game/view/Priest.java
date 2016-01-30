@@ -12,12 +12,10 @@ import com.ggj16.game.model.Direction;
  */
 public class Priest {
 
-    protected static final float SPEED = 300;
-
-
+    protected static final float SPEED = 200;
 
     public enum Action {
-        NONE, RUN, ACT
+        NONE, RUN, ACT, IDLE_RUN
     }
 
     enum State {
@@ -51,10 +49,12 @@ public class Priest {
 
     private State state;
     private float stateTime;
+    private Floor floor;
 
     private Action action = Action.RUN;
 
-    public Priest() {
+    public Priest(Floor floor) {
+        this.floor = floor;
         setState(State.STAND);
     }
 
@@ -95,6 +95,10 @@ public class Priest {
 
     public Direction getDirection() {
         return direction;
+    }
+
+    public Floor getFloor() {
+        return floor;
     }
 
     public void setPosition(float x, float y) {
@@ -161,7 +165,7 @@ public class Priest {
                 vy = 0;
                 if (action == Action.RUN) {
                     setAction(Action.ACT);
-                } else if (action == Action.ACT) {
+                } else if (action == Action.ACT || action == Action.IDLE_RUN) {
                     setAction(Action.NONE);
                 }
             }

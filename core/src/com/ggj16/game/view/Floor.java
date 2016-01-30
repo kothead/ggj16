@@ -1,6 +1,5 @@
 package com.ggj16.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -95,33 +94,27 @@ public class Floor {
 
     public void cut(ChalkLine chalkLine) {
         if (chalkLine.start.y == chalkLine.end.y) {
-            // horizontal
-//            if (tileX < getWidthInPixels() / 2) {
-//                // cut left
-//                visible.x += tileWidth;
-//                visible.width -= tileWidth;
-//            } else {
-//                // cut right
-//                visible.width -= tileWidth;
-//            }
-            Gdx.app.log("Test", "Vertical");
             if (chalkLine.start.y < getHeightInPixels() / 2) {
-                visible.y += cutWidth;
-                visible.height -= cutWidth;
+                if (visible.y < chalkLine.start.y) {
+                    visible.y += cutWidth;
+                    visible.height -= cutWidth;
+                }
             } else {
-                // cut top
-                visible.height -= cutWidth;
+                if (visible.y + visible.getHeight() > chalkLine.start.y) {
+                    visible.height -= cutWidth;
+                }
             }
         }
         if (chalkLine.start.x == chalkLine.end.x) {
-            // vertical
-            Gdx.app.log("Test", "Vertical");
             if (chalkLine.start.x < getWidthInPixels() / 2) {
-                visible.x -= cutWidth;
-                visible.width -= cutWidth;
+                if (visible.x < chalkLine.start.x) {
+                    visible.x += cutWidth;
+                    visible.width -= cutWidth;
+                }
             } else {
-                // cut top
-                visible.width -= cutWidth;
+                if (visible.x + visible.getWidth() > chalkLine.start.x) {
+                    visible.width -= cutWidth;
+                }
             }
         }
     }
@@ -152,5 +145,36 @@ public class Floor {
 
     public float getCutWidth() {
         return cutWidth;
+    }
+
+    public float getVisibleWidthInPixels() {
+        return visible.getWidth();
+    }
+
+    public float getVisibleHeightInPixels() {
+        return visible.getHeight();
+    }
+
+    public boolean isPentagramCircled() {
+        if (visible.getWidth() + cutWidth <= tileWidth * 3 && visible.getHeight() + cutWidth <= tileHeight * 3) {
+            return true;
+        }
+        return false;
+    }
+
+    public float getLeftVisibleWidth() {
+        return getWidthInPixels() / 2 - visible.getX();
+    }
+
+    public float getRightVisibleWidth() {
+        return visible.getX() + visible.getWidth() - getWidthInPixels() / 2;
+    }
+
+    public float getTopVisibleHeight() {
+        return visible.getY() + visible.getHeight() - getHeightInPixels() / 2;
+    }
+
+    public float getBottomVisibleHeight() {
+        return getHeightInPixels() / 2 - visible.getY();
     }
 }

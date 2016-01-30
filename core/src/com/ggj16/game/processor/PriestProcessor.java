@@ -28,10 +28,12 @@ public class PriestProcessor {
         }
     }
 
-    public void generatePriest() {
-        ChalkPriest priest = new ChalkPriest(floor);
-        priest.startDrawing();
-        priests.add(priest);
+    public void generatePriests(int amount) {
+        for (int i = 0; i < amount; i++) {
+            ChalkPriest priest = new ChalkPriest(floor);
+            priest.startDrawing();
+            priests.add(priest);
+        }
     }
 
     public void draw(ShapeRenderer shapeRenderer) {
