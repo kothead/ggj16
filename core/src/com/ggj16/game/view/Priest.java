@@ -1,5 +1,6 @@
 package com.ggj16.game.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -30,7 +31,7 @@ public class Priest {
         FEAR("priest-fear", 3, 0.2f, Animation.PlayMode.NORMAL),
         FEAR_RUN("priest-fear-run", 3, 0.1f),
         MAGNET("priest-lasso", 2, 0.1f),
-        FALL("priest-fall", 3, 0.2f, Animation.PlayMode.NORMAL),
+        FALL("priest-fall", 3, 0.1f, Animation.PlayMode.NORMAL),
         CHALK_UP("priest-back", 2, 0.1f),
         CHALK_LEFT("priest-chalk-left", 2, 0.1f),
         CHALK_RIGHT("priest-chalk-left", 2, 0.1f, true, false),
@@ -87,6 +88,9 @@ public class Priest {
     private float vx, vy;
     protected Direction direction;
 
+    private boolean alive = true;
+    private int fallenTileX, fallenTileY;
+
     private State state;
     private float stateTime;
     private Floor floor;
@@ -107,13 +111,19 @@ public class Priest {
 
     public void draw(SpriteBatch batch) {
         TextureRegion region = getStateFrame();
-        batch.draw(region, x, y, region.getRegionWidth(), region.getRegionHeight());
+        if (state != State.FALL) {
+            batch.draw(region, x, y, region.getRegionWidth(), region.getRegionHeight());
+        } else {
+            batch.draw(region, fallenTileX * floor.getTileWidth() + (floor.getTileWidth() - getWidth()) / 2,
+                    fallenTileY * floor.getTileHeight() + (floor.getTileHeight() - getHeight()) / 2,
+                    region.getRegionWidth(), region.getRegionHeight());
+        }
     }
 
     public void draw(ShapeRenderer shapeRenderer) {
     }
 
-    private void setState(State state) {
+    protected void setState(State state) {
         if (this.state != state) {
             this.state = state;
             stateTime = 0;
@@ -128,8 +138,20 @@ public class Priest {
         return action;
     }
 
+    public boolean isAlive() {
+        return alive;
+    }
+
     private void updateState(float delta) {
         stateTime += delta;
+        if (state.isEnded(stateTime)) {
+            switch (state) {
+                case FALL:
+                    alive = false;
+                    break;
+            }
+            setState(State.STAND);
+        }
     }
 
     private TextureRegion getStateFrame() {
@@ -183,10 +205,58 @@ public class Priest {
                 vx = diffX / path * SPEED;
                 vy = diffY / path * SPEED;
 
-                this.action = action;
-                targetX = x;
-                targetY = y;
+                Direction direction = Direction.getByOffset(Math.abs(vx) >= Math.abs(vy) ? Math.signum(vx) : 0,
+                        Math.abs(vy) > Math.abs(vx) ? Math.signum(vy) : 0);
+                switch (action) {
+                    case ACT:
+                        switch (direction) {
+                            case DOWN:
+                                setState(State.CHALK_DOWN);
+                                break;
+
+                            case LEFT:
+                                setState(State.CHALK_LEFT);
+                                break;
+
+                            case RIGHT:
+                                setState(State.CHALK_RIGHT);
+                                break;
+
+                            case UP:
+                                setState(State.CHALK_UP);
+                                break;
+                        }
+                        break;
+
+                    case IDLE_RUN:
+                    case RUN:
+                        switch (direction) {
+                            case DOWN:
+                                setState(State.DOWN);
+                                break;
+
+                            case LEFT:
+                                setState(State.LEFT);
+                                break;
+
+                            case RIGHT:
+                                setState(State.RIGHT);
+                                break;
+
+                            case UP:
+                                setState(State.UP);
+                                break;
+                        }
+                        break;
+
+                    case NONE:
+                        setState(State.STAND);
+                        break;
+                }
             }
+            this.action = action;
+            targetX = x;
+            targetY = y;
         }
     }
 
@@ -195,8 +265,17 @@ public class Priest {
     }
 
     public void fall() {
-        setTarget(Action.NONE, getX(), getY());
-        // TODO: fall animation
+        if (state == State.FALL) return;
+        action = Action.NONE;
+        vx = 0;
+        vy = 0;
+
+        int tileWidth = floor.getTileWidth();
+        int tileHeight = floor.getTileHeight();
+        fallenTileX = (int) ((getX() + getWidth() / 2) / tileWidth);
+        fallenTileY = (int) ((getY() + getHeight() / 2) / tileHeight);
+
+        setState(State.FALL);
     }
 
     /**
@@ -223,9 +302,8 @@ public class Priest {
             }
 
             return isTargetReached;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public void setRandomTargetPosition(Action action) {

@@ -152,21 +152,26 @@ public class ChalkPriest extends Priest {
                 }
                 break;
         }
+
     }
 
     private void setActTargetPosition() {
         switch (direction) {
             case UP:
                 setTarget(Action.ACT, getX(), getFloor().getVisibleTop());
+                setState(State.CHALK_UP);
                 break;
             case DOWN:
                 setTarget(Action.ACT, getX(), getFloor().getVisibleBottom() - getFloor().getTileHeight());
+                setState(State.CHALK_DOWN);
                 break;
             case LEFT:
                 setTarget(Action.ACT, getFloor().getVisibleLeft() - getFloor().getTileWidth(), getY());
+                setState(State.CHALK_LEFT);
                 break;
             case RIGHT:
                 setTarget(Action.ACT, getFloor().getVisibleRight(), getY());
+                setState(State.CHALK_RIGHT);
                 break;
         }
     }
