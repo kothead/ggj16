@@ -1,9 +1,11 @@
 package com.ggj16.game.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.ggj16.game.data.ImageCache;
 
 /**
@@ -42,14 +44,17 @@ public class Player {
         }
     }
 
+    private Floor floor;
     private float x, y, targetX, targetY;
     private float vx, vy;
     private Action action = Action.NONE;
     private State state;
     private float stateTime;
+    private Rectangle boundingBox = new Rectangle();
 
-    public Player() {
+    public Player(Floor floor) {
         setState(State.STAND);
+        this.floor = floor;
     }
 
     public float getX() {
@@ -101,6 +106,7 @@ public class Player {
                     break;
 
                 case BREAK_FLOOR:
+                    floor.dropTile(x, y);
                     break;
             }
             action = Action.NONE;
@@ -110,6 +116,12 @@ public class Player {
     public void draw(Batch batch, float delta) {
         TextureRegion region = getStateFrame();
         batch.draw(region, x, y, region.getRegionWidth(), region.getRegionHeight());
+    }
+
+    public Rectangle getBoundingBox() {
+        TextureRegion region = getStateFrame();
+        boundingBox.set(x, y, region.getRegionWidth(), region.getRegionHeight());
+        return boundingBox;
     }
 
     private void setState(State state) {

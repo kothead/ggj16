@@ -41,7 +41,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
         sm.setInitialState(GameStates.GAME);
 
         floor = new Floor(16, 10);
-        player = new Player();
+        player = new Player(floor);
         player.setX(floor.getWidthInPixels() / 2);
         player.setY(floor.getHeightInPixels() / 2);
     }
@@ -168,7 +168,11 @@ public class GameScreen extends BaseScreen implements Telegraph {
             Vector3 pos = new Vector3(screenX, screenY, 0);
             getCamera().unproject(pos);
 
-            player.setTarget(Player.Action.GO, pos.x, pos.y);
+            if (player.getBoundingBox().contains(pos.x, pos.y)) {
+                player.setTarget(Player.Action.BREAK_FLOOR, pos.x, pos.y);
+            } else {
+                player.setTarget(Player.Action.GO, pos.x, pos.y);
+            }
             return super.touchDown(screenX, screenY, pointer, button);
         }
 

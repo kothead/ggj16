@@ -1,9 +1,8 @@
 package com.ggj16.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.ggj16.game.data.ImageCache;
 
 /**
@@ -11,6 +10,9 @@ import com.ggj16.game.data.ImageCache;
  */
 public class Floor {
 
+	private static final float FALL_SPEED = 100;
+    private static final float RISE_SPEED = 50;
+    private static final int MAX_FALLEN_TILES = 3;
     private static final String TEXTURE_FLOOR = "floor";
     private static final String TEXTURE_PIT = "pit";
 
@@ -19,6 +21,7 @@ public class Floor {
     private static final float VISIBLE = 1;
 
     private float[][] tiles;
+    private Array<Integer> falling, rising;
 
     private int width, height;
     private int tileWidth, tileHeight;
@@ -30,6 +33,8 @@ public class Floor {
         this.width = width;
         this.height = height;
         tiles = new float[height][width];
+        falling = new Array<Integer>();
+        rising = new Array<Integer>();
 
         textureFloor = ImageCache.getTexture(TEXTURE_FLOOR);
         texturePit = ImageCache.getTexture(TEXTURE_PIT);
@@ -39,6 +44,30 @@ public class Floor {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 tiles[i][j] = i == 0 || j == 0 || i == height - 1 || j == width - 1 ? INVISIBLE : VISIBLE;
+            }
+        }
+    }
+
+    public void process(float delta) {
+        for (int i = 0; i < falling.size; i++) {
+            int x = falling.get(i);
+            int y = falling.get(i + 1);
+            if (tiles[y][x] > INVISIBLE) {
+                tiles[y][x] = tiles[y][x] - FALL_SPEED * delta;
+                if (tiles[y][x] < INVISIBLE) tiles[y][x] = INVISIBLE;
+            }
+        }
+
+        for (int i = 0; i < rising.size; i++) {
+            int x = rising.get(i);
+            int y = rising.get(i + 1);
+            if (tiles[y][x] < VISIBLE) {
+                tiles[y][x] = tiles[y][x] + RISE_SPEED * delta;
+                if (tiles[y][x] > VISIBLE) {
+                    tiles[y][x] = VISIBLE;
+                    rising.removeIndex(i);
+                    rising.removeIndex(i);
+                }
             }
         }
     }
@@ -60,6 +89,22 @@ public class Floor {
                     batch.draw(textureFloor, j, i, tileWidth, tileHeight);
                 }
             }
+        }
+    }
+
+    public void dropTile(int x, int y) {
+        x /= tileWidth;
+        y /= tileHeight;
+
+        falling.add(x);
+        falling.add(y);
+        while (falling.size * 2 > MAX_FALLEN_TILES) {
+            int fallenx = falling.get(0);
+            int falleny = falling.get(1);
+            falling.removeIndex(0);
+            falling.removeIndex(0);
+            rising.add(x);
+            rising.add(y);
         }
     }
 
