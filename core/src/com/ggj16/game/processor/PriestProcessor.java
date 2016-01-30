@@ -8,6 +8,8 @@ import com.ggj16.game.view.Floor;
 import com.ggj16.game.view.LassoPriest;
 import com.ggj16.game.view.Priest;
 
+import java.util.Iterator;
+
 /**
  * Created by kettricken on 30.01.2016.
  */
@@ -21,7 +23,9 @@ public class PriestProcessor {
     }
 
     public void update(float delta) {
-        for (Priest priest : priests) {
+        Iterator<Priest> iter = priests.iterator();
+        while (iter.hasNext()) {
+            Priest priest = iter.next();
             if (priest instanceof ChalkPriest) {
                 ChalkPriest chalkPriest = (ChalkPriest) priest;
                 chalkPriest.process(delta);
@@ -30,17 +34,20 @@ public class PriestProcessor {
                 lassoPriest.process(delta);
             }
             if (floor.onPit(priest)) {
-
+                priest.fall();
+            }
+            if (!priest.isAlive()) {
+                iter.remove();
             }
         }
     }
 
     public void generatePriests(int amount) {
-//        for (int i = 0; i < amount; i++) {
-//            ChalkPriest priest = new ChalkPriest(floor);
-//            priest.startDrawing();
-//            priests.add(priest);
-//        }
+        for (int i = 0; i < amount; i++) {
+            ChalkPriest priest = new ChalkPriest(floor);
+            priest.startDrawing();
+            priests.add(priest);
+        }
         for (int i = 0; i < 1; i++) {
             LassoPriest priest = new LassoPriest(floor);
             priests.add(priest);

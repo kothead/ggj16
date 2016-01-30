@@ -1,5 +1,6 @@
 package com.ggj16.game.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -54,7 +55,7 @@ public class Floor {
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                tiles[i][j] = i == 0 || j == 0 || i == height - 1 || j == width - 1 ? INVISIBLE : VISIBLE;
+                tiles[i][j] = i == 0 || j == 0 || i == height - 1 || j == width - 1 ? BLOCKED : VISIBLE;
             }
         }
 
@@ -238,7 +239,12 @@ public class Floor {
     }
 
     public boolean onPit(Priest priest) {
+        int tilex = (int) ((priest.getX() + priest.getWidth() / 2) / tileWidth);
+        int tiley = (int) ((priest.getY() + priest.getHeight() / 2) / tileHeight);
 
-        return false;
+        return tiley >= 0 && tiley < height
+                && tilex >= 0 && tilex < width
+                && tiles[tiley][tilex] >= INVISIBLE
+                && tiles[tiley][tilex] < VISIBLE;
     }
 }
