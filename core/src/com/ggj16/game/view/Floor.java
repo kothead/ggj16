@@ -53,15 +53,19 @@ public class Floor {
         TextureRegion[] regions = ImageCache.getFrames(TEXTURE_HOLE, 1, 3);
         holeAnimation = new Animation(0.1f, new Array<TextureRegion>(regions), Animation.PlayMode.LOOP);
 
+        initFloor();
+
+        Gdx.app.log("Test", "tileWidth " + tileWidth + " getHeightInPixels " + getHeightInPixels());
+
+        visible = new Rectangle(tileWidth * 2, tileHeight * 2, getWidthInPixels() - tileWidth * 3, getHeightInPixels() - tileHeight * 3);
+    }
+
+    public void initFloor() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 tiles[i][j] = i == 0 || j == 0 || i == height - 1 || j == width - 1 ? INVISIBLE : VISIBLE;
             }
         }
-
-        Gdx.app.log("Test", "tileWidth " + tileWidth + " getHeightInPixels " + getHeightInPixels());
-
-        visible = new Rectangle(tileWidth * 2, tileHeight * 2, getWidthInPixels() - tileWidth * 3, getHeightInPixels() - tileHeight * 3);
     }
 
     public void process(float delta) {
@@ -92,7 +96,6 @@ public class Floor {
 
     public void draw(Batch batch, int offsetX, int offsetY, int screenWidth, int screenHeight) {
         // calculate viewport size
-        Gdx.app.log("Test", "OffsetY " + offsetY);
         int startX = (offsetX / tileWidth - 1) * tileWidth;
         int startY = offsetY - tileHeight;
         int endX = offsetX + screenWidth + tileWidth;
@@ -243,6 +246,10 @@ public class Floor {
 
     public boolean onPit(Priest priest) {
 
+        return false;
+    }
+
+    public boolean onPentagram(Player player) {
         return false;
     }
 }

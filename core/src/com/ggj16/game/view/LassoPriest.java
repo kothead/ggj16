@@ -10,7 +10,7 @@ public class LassoPriest extends Priest {
 
 
     private static final float VISIBILITY_DISTANCE = 500;
-    private static final float LASSO_DISTANCE = 250;
+    private static final float LASSO_DISTANCE = 60;
     private static final float ACTING_TIME = 2;
     GameScreen gameScreen;
 
@@ -38,7 +38,7 @@ public class LassoPriest extends Priest {
             float distance = Utils.getDistance(getX(), getY(), player.getX(), player.getY());
             if (distance <= LASSO_DISTANCE) {
                 setAction(Action.ACTING);
-                player.caught();
+                player.setTrapped();
             } else if (distance > VISIBILITY_DISTANCE) {
                 setRandomTargetPosition();
             }
@@ -46,6 +46,8 @@ public class LassoPriest extends Priest {
             actingTimer += delta;
             if (actingTimer >= ACTING_TIME) {
                 actingTimer = 0;
+                Player player = gameScreen.getPlayer();
+                player.release();
                 setRandomTargetPosition();
             }
         }

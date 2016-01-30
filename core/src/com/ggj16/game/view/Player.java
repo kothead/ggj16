@@ -1,5 +1,6 @@
 package com.ggj16.game.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,12 +18,10 @@ public class Player {
     private static final float SPEED = 600;
     private static final float TRAPPED_SPEED = 200;
 
-    public void caught() {
-        //TODO: implement
-    }
+
 
     public enum Action {
-        NONE, GO, SCARE, BREAK_FLOOR
+        NONE, GO, SCARE, BREAK_FLOOR, TRAPPED
     }
 
     enum State {
@@ -95,6 +94,12 @@ public class Player {
         gameScreen = screen;
     }
 
+    public void reset() {
+        setState(State.STAND);
+        setX(gameScreen.getFloor().getWidthInPixels() / 2);
+        setY(gameScreen.getFloor().getHeightInPixels() / 2);
+    }
+
     public int getWidth() {
         return getStateFrame().getRegionWidth();
     }
@@ -126,6 +131,12 @@ public class Player {
 
     public void setTarget(Action action, float x, float y) {
         // calculate speed pixel per second
+        Gdx.app.log("Test", "action " + action);
+        if (action == Action.TRAPPED && state != State.TRAPPED) {
+            setState(State.TRAPPED);
+        } else if (this.action == Action.TRAPPED) {
+            return;
+        }
         if (action != Action.NONE) {
             float diffX = x - getX();
             float diffY = y - getY();
@@ -135,24 +146,26 @@ public class Player {
                 vx = diffX / path * speed;
                 vy = diffY / path * speed;
 
-                Direction direction = Direction.getByOffset(Math.abs(vx) >= Math.abs(vy) ? Math.signum(vx) : 0,
-                        Math.abs(vy) > Math.abs(vx) ? Math.signum(vy) : 0);
-                switch (direction) {
-                    case DOWN:
-                        setState(State.DOWN);
-                        break;
+                if (action != Action.TRAPPED) {
+                    Direction direction = Direction.getByOffset(Math.abs(vx) >= Math.abs(vy) ? Math.signum(vx) : 0,
+                            Math.abs(vy) > Math.abs(vx) ? Math.signum(vy) : 0);
+                    switch (direction) {
+                        case DOWN:
+                            setState(State.DOWN);
+                            break;
 
-                    case LEFT:
-                        setState(State.LEFT);
-                        break;
+                        case LEFT:
+                            setState(State.LEFT);
+                            break;
 
-                    case RIGHT:
-                        setState(State.RIGHT);
-                        break;
+                        case RIGHT:
+                            setState(State.RIGHT);
+                            break;
 
-                    case UP:
-                        setState(State.UP);
-                        break;
+                        case UP:
+                            setState(State.UP);
+                            break;
+                    }
                 }
             }
             this.action = action;
@@ -162,6 +175,7 @@ public class Player {
     }
 
     public void process(float delta) {
+        checkDying();
         updateState(delta);
         if (action != Action.NONE && updatePosition(delta)) {
             switch (action) {
@@ -177,6 +191,12 @@ public class Player {
                     break;
             }
             action = Action.NONE;
+        }
+    }
+
+    private void checkDying() {
+        if (gameScreen.getFloor().onPentagram(this)) {
+            // setState(State.Dying);
         }
     }
 
@@ -212,6 +232,10 @@ public class Player {
 
                 case TRAPPED:
                     break;
+
+//                case DYING:
+//                    gameScreen.getStateMachine().changeState(GameStates.GAME_OVER);
+//                    break;
             }
             setState(State.STAND);
         }
@@ -245,4 +269,13 @@ public class Player {
     private TextureRegion getStateFrame() {
         return state.getFrame(stateTime);
     }
+
+    public void setTrapped() {
+        setTarget(Action.TRAPPED, gameScreen.getFloor().getWidthInPixels() / 2, gameScreen.getFloor().getHeightInPixels() / 2);
+    }
+
+    public void release() {
+        action = Action.NONE;
+    }
+
 }

@@ -7,7 +7,6 @@ import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -85,12 +84,15 @@ public class GameScreen extends BaseScreen implements Telegraph {
         // process block
         sm.update();
         stage.act(delta);
-        player.process(delta);
-        floor.process(delta);
-        updateCameraPosition();
-        shapeRenderer.setProjectionMatrix(getCamera().combined);
 
-        priestProcessor.update(delta);
+        if (sm.getCurrentState() == GameStates.GAME) {
+            player.process(delta);
+            floor.process(delta);
+            updateCameraPosition();
+            priestProcessor.update(delta);
+        }
+
+        shapeRenderer.setProjectionMatrix(getCamera().combined);
 
         // drawing block
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -158,7 +160,11 @@ public class GameScreen extends BaseScreen implements Telegraph {
     }
 
     public void restart() {
-        delay = 0;
+        floor.initFloor();
+        priestProcessor.clear();
+        priestProcessor.generatePriests(3);
+        player.reset();
+
     }
 
     public boolean hasEnded() {
@@ -198,7 +204,9 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
         @Override
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-            Camera camera = getCamera();
+            if (sm.getCurrentState() != GameStates.GAME) {
+                return false;
+            }
 
 //            float x = camera.position.x - camera.viewportWidth / 2
 //                    + screenX / (float) Gdx.graphics.getWidth() * getWorldWidth();

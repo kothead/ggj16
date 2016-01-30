@@ -74,4 +74,8 @@ public class PriestProcessor {
     public void panic(float x, float y) {
 
     }
+
+    public void clear() {
+        priests.clear();
+    }
 }
