@@ -9,6 +9,7 @@ import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.ggj16.game.GGJGame;
@@ -17,6 +18,7 @@ import com.ggj16.game.processor.ViewProcessor;
 import com.ggj16.game.state.GameStates;
 import com.ggj16.game.view.Floor;
 import com.ggj16.game.view.Player;
+import com.ggj16.game.view.Priest;
 
 /**
  * Created by kettricken on 30.01.2016.
@@ -31,6 +33,9 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
     private Floor floor;
     private Player player;
+
+    private ShapeRenderer shapeRenderer = new ShapeRenderer(); // delete if the final fog will not need this
+    private Priest priest = new Priest();
 
     public GameScreen(GGJGame game) {
         super(game);
@@ -56,6 +61,8 @@ public class GameScreen extends BaseScreen implements Telegraph {
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
         Gdx.input.setCatchBackKey(true);
+
+        priest.startDrawing();
     }
 
     @Override
@@ -76,6 +83,9 @@ public class GameScreen extends BaseScreen implements Telegraph {
         getCamera().position.y = player.getY();
         getCamera().update();
         batch().setProjectionMatrix(getCamera().combined);
+        shapeRenderer.setProjectionMatrix(getCamera().combined);
+
+        priest.update();
 
         // drawing block
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -85,6 +95,13 @@ public class GameScreen extends BaseScreen implements Telegraph {
         floor.draw(batch(), 0, 0, (int) getWorldWidth(), (int) getWorldHeight());
         player.draw(batch(), delta);
         batch().end();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        // draw line
+        priest.draw(shapeRenderer);
+        // draw fog
+        floor.draw(shapeRenderer, 0, 0, (int) getWorldWidth(), (int) getWorldHeight());
+        shapeRenderer.end();
 
         stage.draw();
     }

@@ -1,9 +1,9 @@
 package com.ggj16.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.ggj16.game.data.ImageCache;
 
 /**
@@ -24,6 +24,8 @@ public class Floor {
     private int tileWidth, tileHeight;
     private TextureRegion textureFloor, texturePit, tetureGlow;
 
+    private Rectangle visible;
+
     public Floor(int width, int height) {
         this.width = width;
         this.height = height;
@@ -39,6 +41,8 @@ public class Floor {
                 tiles[i][j] = i == 0 || j == 0 || i == height - 1 || j == width - 1 ? INVISIBLE : VISIBLE;
             }
         }
+
+        visible = new Rectangle(0, 0, getWidthInPixels(), getHeightInPixels());
     }
 
     public void draw(Batch batch, int offsetX, int offsetY, int screenWidth, int screenHeight) {
@@ -48,7 +52,7 @@ public class Floor {
         offsetY = offsetY % tileHeight - tileHeight;
 
         for (int i = offsetY; i <= screenHeight; i += tileHeight) {
-            for (int j = offsetY; j <= screenWidth; j += tileWidth) {
+            for (int j = offsetX; j <= screenWidth; j += tileWidth) {
                 batch.draw(textureFloor, j, i, tileWidth, tileHeight);
             }
         }
@@ -69,4 +73,38 @@ public class Floor {
     public int getHeightInTiles() {
         return height;
     }
+
+    public void draw(ShapeRenderer shapeRenderer, int offsetX, int offsetY, int screenWidth, int screenHeight) {
+        offsetX = offsetX % tileWidth - tileWidth;
+        offsetY = offsetY % tileHeight - tileHeight;
+
+        // x, y are the bottom left corner
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(1, 0, 0, 1);
+        shapeRenderer.rect(offsetX + visible.x, offsetY + visible.y, visible.width, visible.height);
+    }
+
+    public void cut(int tileX, int tileY) {
+        if (tileX != 0) {
+            if (tileX < getWidthInPixels() / 2) {
+                // cut left
+                visible.x += tileWidth;
+                visible.width -= tileWidth;
+            } else {
+                // cut right
+                visible.width -= tileWidth;
+            }
+        }
+        if (tileY != 0) {
+            if (tileY < getHeightInPixels() / 2) {
+                // cut bottom
+                visible.y -= tileHeight;
+                visible.height -= tileHeight;
+            } else {
+                // cut top
+                visible.height -= tileHeight;
+            }
+        }
+    }
+
 }
