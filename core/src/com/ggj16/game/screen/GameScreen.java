@@ -22,6 +22,7 @@ import com.ggj16.game.processor.ViewProcessor;
 import com.ggj16.game.state.GameStates;
 import com.ggj16.game.view.Floor;
 import com.ggj16.game.view.Player;
+import com.ggj16.game.view.Priest;
 
 /**
  * Created by kettricken on 30.01.2016.
@@ -52,7 +53,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
         sm.setInitialState(GameStates.GAME);
 
         floor = new Floor(16, 10);
-        player = new Player(floor);
+        player = new Player(this);
         player.setX(floor.getWidthInPixels() / 2);
         player.setY(floor.getHeightInPixels() / 2);
 
@@ -140,6 +141,14 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
     }
 
+    public Floor getFloor() {
+        return floor;
+    }
+
+    public PriestProcessor getPriestProcessor() {
+        return priestProcessor;
+    }
+
     public StateMachine getStateMachine() {
         return sm;
     }
@@ -198,11 +207,28 @@ public class GameScreen extends BaseScreen implements Telegraph {
             Vector3 pos = new Vector3(screenX, screenY, 0);
             getCamera().unproject(pos);
 
-            if (player.getBoundingBox().contains(pos.x, pos.y)) {
-                int tileWidth = floor.getTileWidth();
-                int tileHeight = floor.getTileHeight();
+            int tileWidth = floor.getTileWidth();
+            int tileHeight = floor.getTileHeight();
+
+            Priest priest = priestProcessor.findTouchedPriest(pos.x, pos.y);
+
+            if (priest != null) {
+                pos.x = priest.getX() + priest.getWidth() / 2;
+                pos.y = priest.getY() + priest.getHeight() / 2;
+
+                float difx = pos.x - player.getX();
+                float dify = pos.y - player.getY();
+
+                int tilex = (int) (pos.x / tileWidth - (Math.abs(difx) > Math.abs(dify) ? Math.signum(difx) : 0));
+                int tiley = (int) (pos.y / tileHeight - (Math.abs(dify) > Math.abs(difx) ? Math.signum(dify) : 0));
+
+                player.setTarget(Player.Action.SCARE,
+                        tilex * tileWidth + (tileWidth - player.getWidth()) / 2,
+                        tiley * tileHeight + (tileHeight - player.getHeight()) / 2);
+            } else if (player.getBoundingBox().contains(pos.x, pos.y)) {
                 int tilex = (int) (pos.x / tileWidth);
                 int tiley = (int) (pos.y / tileHeight);
+
                 player.setTarget(Player.Action.BREAK_FLOOR,
                         tilex * tileWidth + (tileWidth - player.getWidth()) / 2,
                         tiley * tileHeight + (tileHeight - player.getHeight()) / 2);

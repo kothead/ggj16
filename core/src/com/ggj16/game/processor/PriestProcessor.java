@@ -61,4 +61,17 @@ public class PriestProcessor {
             priest.draw(spriteBatch);
         }
     }
+
+    public Priest findTouchedPriest(float x, float y) {
+        for (Priest priest: priests) {
+            if (priest.getBoundingBox().contains(x, y)) {
+                return priest;
+            }
+        }
+        return null;
+    }
+
+    public void panic(float x, float y) {
+
+    }
 }

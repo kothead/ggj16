@@ -30,11 +30,11 @@ public enum Direction {
     }
 
     public static Direction getByOffset(float dx, float dy) {
-        float angle = MathUtils.PI + SEGMENT_ANGLE / 2f + MathUtils.atan2(dy, dx);
-        int steps = (int) (angle / SEGMENT_ANGLE);
-        if (steps < 0) steps += directions.length;
-        steps %= directions.length;
-        return directions[steps];
+        if (dx > 0) return RIGHT;
+        if (dx < 0) return LEFT;
+        if (dy > 0) return UP;
+        if (dy < 0) return DOWN;
+        return null;
     }
 
     private static void opposite(Direction first, Direction second) {
