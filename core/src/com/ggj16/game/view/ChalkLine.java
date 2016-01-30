@@ -13,6 +13,7 @@ public class ChalkLine {
 
     public ChalkLine(float startX, float startY) {
         start.set(startX, startY);
+        end.set(startX, startY);
     }
 
     public void increase(float x, float y) {
@@ -20,12 +21,13 @@ public class ChalkLine {
     }
 
     public void draw(ShapeRenderer shapeRenderer) {
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setAutoShapeType(true);
+        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(1, 1, 1, 1);
-        shapeRenderer.line(start.x, start.y, end.x, end.y);
+        shapeRenderer.rectLine(start.x, start.y, end.x, end.y, 3);
     }
 
-    public void process(float delta) {
-        increase(0, 5);
+    public Vector2 getEnd() {
+        return end;
     }
 }

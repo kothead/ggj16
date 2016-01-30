@@ -13,12 +13,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.ggj16.game.GGJGame;
+import com.ggj16.game.processor.CutProcessor;
 import com.ggj16.game.processor.InputProcessor;
 import com.ggj16.game.processor.ViewProcessor;
 import com.ggj16.game.state.GameStates;
+import com.ggj16.game.view.ChalkPriest;
 import com.ggj16.game.view.Floor;
 import com.ggj16.game.view.Player;
-import com.ggj16.game.view.Priest;
 
 /**
  * Created by kettricken on 30.01.2016.
@@ -34,8 +35,8 @@ public class GameScreen extends BaseScreen implements Telegraph {
     private Floor floor;
     private Player player;
 
+    private CutProcessor cutProcessor;
     private ShapeRenderer shapeRenderer = new ShapeRenderer(); // delete if the final fog will not need this
-    private Priest priest = new Priest();
 
     public GameScreen(GGJGame game) {
         super(game);
@@ -49,6 +50,10 @@ public class GameScreen extends BaseScreen implements Telegraph {
         player = new Player();
         player.setX(floor.getWidthInPixels() / 2);
         player.setY(floor.getHeightInPixels() / 2);
+
+        cutProcessor = new CutProcessor(floor);
+        ChalkPriest priest = new ChalkPriest();
+        cutProcessor.addPriest(priest);
     }
 
     @Override
@@ -61,8 +66,6 @@ public class GameScreen extends BaseScreen implements Telegraph {
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
         Gdx.input.setCatchBackKey(true);
-
-        priest.startDrawing();
     }
 
     @Override
@@ -85,7 +88,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
         batch().setProjectionMatrix(getCamera().combined);
         shapeRenderer.setProjectionMatrix(getCamera().combined);
 
-        priest.update();
+        cutProcessor.update(delta);
 
         // drawing block
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -100,7 +103,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         // draw line
-        priest.draw(shapeRenderer);
+        cutProcessor.draw(shapeRenderer);
         // draw fog
         floor.draw(shapeRenderer, 0, 0, (int) getWorldWidth(), (int) getWorldHeight());
         shapeRenderer.end();

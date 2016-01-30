@@ -91,7 +91,7 @@ public class Floor {
         shapeRenderer.rect(offsetX + visible.x, offsetY + visible.y, visible.width, visible.height);
     }
 
-    public void cut(int tileX, int tileY) {
+    public void cut(float tileX, float tileY) {
         if (tileX != 0) {
             if (tileX < getWidthInPixels() / 2) {
                 // cut left
@@ -114,4 +114,7 @@ public class Floor {
         }
     }
 
+    public float getVisibleTop() {
+        return visible.y + visible.height;
+    }
 }
