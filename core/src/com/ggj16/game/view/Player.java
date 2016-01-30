@@ -44,7 +44,7 @@ public class Player {
 
     private float x, y, targetX, targetY;
     private float vx, vy;
-    private Action action;
+    private Action action = Action.NONE;
     private State state;
     private float stateTime;
 
@@ -129,10 +129,6 @@ public class Player {
      * @return whether target is reached or not
      */
     private boolean updatePosition(float delta) {
-        Gdx.app.log("POSITION", getX() + " " + getY());
-        Gdx.app.log("TARGET", targetX + " " + targetY);
-        Gdx.app.log("SPEED", vx + " " + vy);
-
         if (vx != 0 || vy != 0) {
             setPosition(getX() + vx * delta, getY() + vy * delta);
             float diffX = x - targetX;
@@ -140,7 +136,7 @@ public class Player {
             boolean isTargetReached = (diffX == 0 || Math.signum(diffX) == Math.signum(vx))
                     && (diffY == 0 || Math.signum(diffY) == Math.signum(vy));
             if (isTargetReached) {
-                //setPosition(targetX, targetY);
+                setPosition(targetX, targetY);
                 vx = 0;
                 vy = 0;
             }
