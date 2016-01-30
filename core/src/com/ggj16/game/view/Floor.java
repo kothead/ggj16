@@ -1,5 +1,6 @@
 package com.ggj16.game.view;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -15,8 +16,8 @@ public class Floor {
 	private static final float FALL_SPEED = 10;
     private static final float RISE_SPEED = 3;
     private static final int MAX_FALLEN_TILES = 3;
-    private static final String TEXTURE_FLOOR = "floor-tile-v6";
-    private static final String TEXTURE_HOLE = "floor-tile-hole";
+    private static final String TEXTURE_FLOOR = "floor-tile-v7";
+    private static final String TEXTURE_HOLE = "floor-tile-hole-fire";
 
     private static final float BLOCKED = -1;
     private static final float INVISIBLE = 0;
@@ -27,7 +28,9 @@ public class Floor {
 
     private int width, height;
     private int tileWidth, tileHeight;
-    private TextureRegion textureFloor, textureHole, tetureGlow;
+    private TextureRegion textureFloor;
+    private Animation holeAnimation;
+    private float stateTime;
 
     private Rectangle visible;
 
@@ -43,9 +46,11 @@ public class Floor {
         rising = new Array<Integer>();
 
         textureFloor = ImageCache.getTexture(TEXTURE_FLOOR);
-        textureHole = ImageCache.getTexture(TEXTURE_HOLE);
         tileWidth = textureFloor.getRegionWidth();
         tileHeight = textureFloor.getRegionHeight();
+
+        TextureRegion[] regions = ImageCache.getFrames(TEXTURE_HOLE, 1, 3);
+        holeAnimation = new Animation(0.1f, new Array<TextureRegion>(regions), Animation.PlayMode.LOOP);
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -57,6 +62,8 @@ public class Floor {
     }
 
     public void process(float delta) {
+        stateTime += delta;
+
         for (int i = 0; i < falling.size; i += 2) {
             int x = falling.get(i);
             int y = falling.get(i + 1);
@@ -97,7 +104,7 @@ public class Floor {
                     float visibility = tiles[tiley][tilex];
 
                     if (visibility >= INVISIBLE && visibility < VISIBLE) {
-                        batch.draw(textureHole, j, i, tileWidth, tileHeight);
+                        batch.draw(holeAnimation.getKeyFrame(stateTime), j, i, tileWidth, tileHeight);
                     }
                     if (visibility > INVISIBLE) {
                         batch.draw(textureFloor, j, i + tileHeight * (visibility - VISIBLE), tileWidth, tileHeight);

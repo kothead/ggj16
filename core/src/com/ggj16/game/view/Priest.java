@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.ggj16.game.data.ImageCache;
 import com.ggj16.game.model.Direction;
 import com.ggj16.game.util.Utils;
@@ -20,18 +22,47 @@ public class Priest {
     }
 
     enum State {
-        STAND("priest", 1, 0);
+        STAND("priest-stand", 1, 0),
+        UP("priest-back", 2, 0.1f),
+        LEFT("priest-left", 2, 0.1f),
+        RIGHT("priest-left", 2, 0.1f, true, false),
+        DOWN("priest-down", 2, 0.1f),
+        FEAR("priest-fear", 3, 0.2f, Animation.PlayMode.NORMAL),
+        FEAR_RUN("priest-fear-run", 3, 0.1f),
+        MAGNET("priest-lasso", 2, 0.1f),
+        FALL("priest-fall", 3, 0.2f, Animation.PlayMode.NORMAL),
+        CHALK_UP("priest-back", 2, 0.1f),
+        CHALK_LEFT("priest-chalk-left", 2, 0.1f),
+        CHALK_RIGHT("priest-chalk-left", 2, 0.1f, true, false),
+        CHALK_DOWN("priest-chalk", 2, 0.1f);
 
         private boolean animated;
         private Animation animation;
         private TextureRegion region;
 
         State(String texture, int count, float duration) {
+            this(texture, count, duration, false, false);
+        }
+
+        State(String texture, int count, float duration, boolean flipX, boolean flipY) {
+            this(texture, count, duration, flipX, flipY, Animation.PlayMode.LOOP);
+        }
+
+        State(String texture, int count, float duration, Animation.PlayMode playMode) {
+            this(texture, count, duration, false, false, playMode);
+        }
+
+        State(String texture, int count, float duration, boolean flipX, boolean flipY, Animation.PlayMode playMode) {
             if (count > 1) {
                 animated = true;
-                animation = new Animation(duration, ImageCache.getFrames(texture, 1, count));
+                TextureRegion[] regions = ImageCache.getFrames(texture, 1, count, flipX, flipY);
+                animation = new Animation(duration, new Array<TextureRegion>(regions), playMode);
             } else {
                 region = ImageCache.getTexture(texture);
+                if (flipX || flipY) {
+                    region = new TextureRegion(region);
+                    region.flip(flipX, flipY);
+                }
             }
         }
 
@@ -40,6 +71,14 @@ public class Priest {
                 return animation.getKeyFrame(stateTime, true);
             } else {
                 return region;
+            }
+        }
+
+        public boolean isEnded(float stateTime) {
+            if (animated && animation.getPlayMode() == Animation.PlayMode.NORMAL) {
+                return animation.isAnimationFinished(stateTime);
+            } else {
+                return false;
             }
         }
     }
@@ -51,6 +90,7 @@ public class Priest {
     private State state;
     private float stateTime;
     private Floor floor;
+    private Rectangle boundingBox = new Rectangle();
 
     private Action action = Action.RUN;
 
@@ -190,5 +230,11 @@ public class Priest {
         float posX = Utils.randomFloat(getFloor().getVisibleLeft(), getFloor().getVisibleRight());
         float posY = Utils.randomFloat(getFloor().getVisibleBottom(), getFloor().getVisibleTop());
         setTarget(Action.IDLE_RUN, posX, posY);
+    }
+
+    public Rectangle getBoundingBox() {
+        TextureRegion region = getStateFrame();
+        boundingBox.set(x, y, region.getRegionWidth(), region.getRegionHeight());
+        return boundingBox;
     }
 }

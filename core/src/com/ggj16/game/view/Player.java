@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.ggj16.game.data.ImageCache;
 import com.ggj16.game.model.Direction;
+import com.ggj16.game.screen.GameScreen;
 
 /**
  * Created by st on 1/30/16.
@@ -14,6 +16,7 @@ import com.ggj16.game.model.Direction;
 public class Player {
 
     private static final float SPEED = 600;
+    private static final float TRAPPED_SPEED = 200;
 
     public enum Action {
         NONE, GO, SCARE, BREAK_FLOOR
@@ -25,7 +28,9 @@ public class Player {
         LEFT("ghost-left", 4, 0.1f),
         RIGHT("ghost-left", 4, 0.1f, true, false),
         UP("ghost-up", 4, 0.1f),
-        BREAK_FLOOR("ghost-floor", 4, 0.1f, Animation.PlayMode.NORMAL);
+        TRAPPED("ghost-trapped", 3, 0.1f, Animation.PlayMode.LOOP),
+        BREAK_FLOOR("ghost-floor", 4, 0.1f, Animation.PlayMode.NORMAL),
+        SCREAM("ghost-scream", 7, 0.1f, Animation.PlayMode.NORMAL);
 
         private boolean animated;
         private Animation animation;
@@ -46,7 +51,8 @@ public class Player {
         State(String texture, int count, float duration, boolean flipX, boolean flipY, Animation.PlayMode playMode) {
             if (count > 1) {
                 animated = true;
-                animation = new Animation(duration, ImageCache.getFrames(texture, 1, count, flipX, flipY));
+                TextureRegion[] regions = ImageCache.getFrames(texture, 1, count, flipX, flipY);
+                animation = new Animation(duration, new Array<TextureRegion>(regions), playMode);
             } else {
                 region = ImageCache.getTexture(texture);
                 if (flipX || flipY) {
@@ -65,7 +71,7 @@ public class Player {
         }
 
         public boolean isEnded(float stateTime) {
-            if (animated) {
+            if (animated && animation.getPlayMode() == Animation.PlayMode.NORMAL) {
                 return animation.isAnimationFinished(stateTime);
             } else {
                 return false;
@@ -73,7 +79,7 @@ public class Player {
         }
     }
 
-    private Floor floor;
+    private GameScreen gameScreen;
     private float x, y, targetX, targetY;
     private float vx, vy;
     private Action action = Action.NONE;
@@ -81,9 +87,9 @@ public class Player {
     private float stateTime;
     private Rectangle boundingBox = new Rectangle();
 
-    public Player(Floor floor) {
+    public Player(GameScreen screen) {
         setState(State.STAND);
-        this.floor = floor;
+        gameScreen = screen;
     }
 
     public int getWidth() {
@@ -122,8 +128,9 @@ public class Player {
             float diffY = y - getY();
             float path = (float) Math.sqrt(diffX * diffX + diffY * diffY);
             if (path > 0) {
-                vx = diffX / path * SPEED;
-                vy = diffY / path * SPEED;
+                float speed = state == State.TRAPPED ? TRAPPED_SPEED : SPEED;
+                vx = diffX / path * speed;
+                vy = diffY / path * speed;
 
                 Direction direction = Direction.getByOffset(Math.abs(vx) >= Math.abs(vy) ? Math.signum(vx) : 0,
                         Math.abs(vy) > Math.abs(vx) ? Math.signum(vy) : 0);
@@ -159,6 +166,7 @@ public class Player {
                     break;
 
                 case SCARE:
+                    setState(State.SCREAM);
                     break;
 
                 case BREAK_FLOOR:
@@ -192,7 +200,14 @@ public class Player {
         if (state.isEnded(stateTime)) {
             switch (state) {
                 case BREAK_FLOOR:
-                    floor.dropTile(x + getWidth() / 2, y + getHeight() / 2);
+                    gameScreen.getFloor().dropTile(x + getWidth() / 2, y + getHeight() / 2);
+                    break;
+
+                case SCREAM:
+                    gameScreen.getPriestProcessor().panic(x + getWidth() / 2, y + getHeight() / 2);
+                    break;
+
+                case TRAPPED:
                     break;
             }
             setState(State.STAND);
