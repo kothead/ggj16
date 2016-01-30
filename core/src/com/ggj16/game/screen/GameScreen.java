@@ -21,6 +21,7 @@ import com.ggj16.game.processor.ViewProcessor;
 import com.ggj16.game.state.GameStates;
 import com.ggj16.game.view.Floor;
 import com.ggj16.game.view.Player;
+import com.ggj16.game.view.Portal;
 import com.ggj16.game.view.Priest;
 
 /**
@@ -39,6 +40,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
     private Floor floor;
     private Player player;
+    private Portal portal;
 
     private PriestProcessor priestProcessor;
     private ShapeRenderer shapeRenderer = new ShapeRenderer(); // delete if the final fog will not need this
@@ -60,6 +62,8 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
         priestProcessor = new PriestProcessor(floor, this);
         priestProcessor.generatePriests(4);
+
+        portal = new Portal(this);
     }
 
     @Override
@@ -104,6 +108,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
         floor.draw(batch(), (int) (getCamera().position.x - getCamera().viewportWidth / 2),
                 (int) (getCamera().position.y - getCamera().viewportHeight / 2),
                 (int) getWorldWidth(), (int) getWorldHeight());
+        portal.draw(batch());
         player.draw(batch(), delta);
         batch().end();
 
@@ -147,6 +152,10 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
     public Floor getFloor() {
         return floor;
+    }
+
+    public Portal getPortal() {
+        return portal;
     }
 
     public PriestProcessor getPriestProcessor() {
@@ -246,7 +255,8 @@ public class GameScreen extends BaseScreen implements Telegraph {
                 player.setTarget(Player.Action.SCARE,
                         tilex * tileWidth + (tileWidth - player.getWidth()) / 2,
                         tiley * tileHeight + (tileHeight - player.getHeight()) / 2);
-            } else if (player.getBoundingBox().contains(pos.x, pos.y)) {
+            } else if (!portal.getBoundingRectangle().contains(pos.x, pos.y)
+                    && player.getBoundingBox().contains(pos.x, pos.y)) {
                 int tilex = (int) (pos.x / tileWidth);
                 int tiley = (int) (pos.y / tileHeight);
 

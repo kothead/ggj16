@@ -15,7 +15,7 @@ import com.ggj16.game.util.Utils;
  */
 public class Priest {
 
-    protected static final float SPEED = 200;
+    protected static final float SPEED = 300;
 
     public enum Action {
         NONE, RUN, ACT, IDLE_RUN, ACTING, PANIC

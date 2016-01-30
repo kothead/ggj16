@@ -1,6 +1,7 @@
 package com.ggj16.game.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.ggj16.game.data.ImageCache;
 import com.ggj16.game.model.Direction;
 import com.ggj16.game.screen.GameScreen;
+import com.ggj16.game.state.GameStates;
 
 /**
  * Created by st on 1/30/16.
@@ -17,6 +19,7 @@ public class Player {
 
     private static final float SPEED = 600;
     private static final float TRAPPED_SPEED = 200;
+    private static final float TIME_TO_DEATH = 5;
 
     public enum Action {
         NONE, GO, SCARE, BREAK_FLOOR, TRAPPED
@@ -85,6 +88,7 @@ public class Player {
     private Action action = Action.NONE;
     private State state;
     private float stateTime;
+    private float deathTime = 0;
     private Rectangle boundingBox = new Rectangle();
 
     public Player(GameScreen screen) {
@@ -128,6 +132,19 @@ public class Player {
     }
 
     public void setTarget(Action action, float x, float y) {
+
+        Floor floor = gameScreen.getFloor();
+        if (y + getHeight() > floor.getVisibleTop()) {
+            y = floor.getVisibleTop() - getHeight();
+        } else if (y < floor.getVisibleBottom()) {
+            y = floor.getVisibleBottom();
+        }
+        if (x + getWidth() > floor.getVisibleRight()) {
+            x = floor.getVisibleRight() - getWidth();
+        } else if (x < floor.getVisibleLeft()) {
+            x = floor.getVisibleLeft();
+        }
+
         // calculate speed pixel per second
         Gdx.app.log("Test", "action " + action);
         if (action == Action.TRAPPED && state != State.TRAPPED) {
@@ -173,7 +190,19 @@ public class Player {
     }
 
     public void process(float delta) {
-        checkDying();
+        Rectangle death = gameScreen.getPortal().getBoundingRectangle();
+        if (death.contains(x + getWidth() / 2, y + getHeight() / 2)) {
+            deathTime += delta;
+            if (deathTime >= TIME_TO_DEATH) {
+                deathTime = TIME_TO_DEATH;
+                gameScreen.getStateMachine().changeState(GameStates.GAME_OVER);
+            }
+        } else if (deathTime > 0) {
+            deathTime -= delta;
+        } else if (deathTime < 0) {
+            deathTime = 0;
+        }
+
         updateState(delta);
         if (action != Action.NONE && updatePosition(delta)) {
             switch (action) {
@@ -194,15 +223,12 @@ public class Player {
         }
     }
 
-    private void checkDying() {
-        if (gameScreen.getFloor().onPentagram(this)) {
-            // setState(State.Dying);
-        }
-    }
-
     public void draw(Batch batch, float delta) {
         TextureRegion region = getStateFrame();
+        Color color = new Color(batch.getColor());
+        batch.setColor(color.r, color.g, color.b, 1 - deathTime / TIME_TO_DEATH );
         batch.draw(region, x, y, region.getRegionWidth(), region.getRegionHeight());
+        batch.setColor(color);
     }
 
     public Rectangle getBoundingBox() {
