@@ -171,9 +171,5 @@ public class ChalkPriest extends Priest {
         }
     }
 
-    private void setRandomTargetPosition() {
-        float posX = Utils.randomFloat(getFloor().getVisibleLeft(), getFloor().getVisibleRight());
-        float posY = Utils.randomFloat(getFloor().getVisibleBottom(), getFloor().getVisibleTop());
-        setTarget(Action.IDLE_RUN, posX, posY);
-    }
+
 }

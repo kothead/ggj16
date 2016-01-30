@@ -225,4 +225,9 @@ public class Floor {
     public float getBottomVisibleHeight() {
         return getHeightInPixels() / 2 - visible.getY();
     }
+
+    public boolean onPit(Priest priest) {
+
+        return false;
+    }
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ggj16.game.data.ImageCache;
 import com.ggj16.game.model.Direction;
+import com.ggj16.game.util.Utils;
 
 /**
  * Created by kettricken on 30.01.2016.
@@ -147,6 +148,15 @@ public class Priest {
         }
     }
 
+    public void scare() {
+        setRandomTargetPosition();
+    }
+
+    public void fall() {
+        setTarget(Action.NONE, getX(), getY());
+        // TODO: fall animation
+    }
+
     /**
      * Update position according to current speed
      * @param delta time
@@ -174,5 +184,11 @@ public class Priest {
         } else {
             return false;
         }
+    }
+
+    public void setRandomTargetPosition() {
+        float posX = Utils.randomFloat(getFloor().getVisibleLeft(), getFloor().getVisibleRight());
+        float posY = Utils.randomFloat(getFloor().getVisibleBottom(), getFloor().getVisibleTop());
+        setTarget(Action.IDLE_RUN, posX, posY);
     }
 }
