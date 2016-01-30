@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.ggj16.game.data.ImageCache;
+import com.ggj16.game.model.Direction;
 
 /**
  * Created by st on 1/30/16.
@@ -19,18 +20,39 @@ public class Player {
     }
 
     enum State {
-        STAND("ghost", 1, 0);
+        STAND("ghost-standing", 2, 0.1f),
+        DOWN("ghost-down", 4, 0.1f),
+        LEFT("ghost-left", 4, 0.1f),
+        RIGHT("ghost-left", 4, 0.1f, true, false),
+        UP("ghost-up", 4, 0.1f),
+        BREAK_FLOOR("ghost-floor", 4, 0.1f, Animation.PlayMode.NORMAL);
 
         private boolean animated;
         private Animation animation;
         private TextureRegion region;
 
         State(String texture, int count, float duration) {
+            this(texture, count, duration, false, false);
+        }
+
+        State(String texture, int count, float duration, boolean flipX, boolean flipY) {
+            this(texture, count, duration, flipX, flipY, Animation.PlayMode.LOOP);
+        }
+
+        State(String texture, int count, float duration, Animation.PlayMode playMode) {
+            this(texture, count, duration, false, false, playMode);
+        }
+
+        State(String texture, int count, float duration, boolean flipX, boolean flipY, Animation.PlayMode playMode) {
             if (count > 1) {
                 animated = true;
-                animation = new Animation(duration, ImageCache.getFrames(texture, 1, count));
+                animation = new Animation(duration, ImageCache.getFrames(texture, 1, count, flipX, flipY));
             } else {
                 region = ImageCache.getTexture(texture);
+                if (flipX || flipY) {
+                    region = new TextureRegion(region);
+                    region.flip(flipX, flipY);
+                }
             }
         }
 
@@ -39,6 +61,14 @@ public class Player {
                 return animation.getKeyFrame(stateTime, true);
             } else {
                 return region;
+            }
+        }
+
+        public boolean isEnded(float stateTime) {
+            if (animated) {
+                return animation.isAnimationFinished(stateTime);
+            } else {
+                return false;
             }
         }
     }
@@ -94,6 +124,26 @@ public class Player {
             if (path > 0) {
                 vx = diffX / path * SPEED;
                 vy = diffY / path * SPEED;
+
+                Direction direction = Direction.getByOffset(Math.abs(vx) >= Math.abs(vy) ? Math.signum(vx) : 0,
+                        Math.abs(vy) > Math.abs(vx) ? Math.signum(vy) : 0);
+                switch (direction) {
+                    case DOWN:
+                        setState(State.DOWN);
+                        break;
+
+                    case LEFT:
+                        setState(State.LEFT);
+                        break;
+
+                    case RIGHT:
+                        setState(State.RIGHT);
+                        break;
+
+                    case UP:
+                        setState(State.UP);
+                        break;
+                }
             }
             this.action = action;
             targetX = x;
@@ -112,7 +162,7 @@ public class Player {
                     break;
 
                 case BREAK_FLOOR:
-                    floor.dropTile(x + getWidth() / 2, y + getHeight() / 2);
+                    setState(State.BREAK_FLOOR);
                     break;
             }
             action = Action.NONE;
@@ -139,6 +189,14 @@ public class Player {
 
     private void updateState(float delta) {
         stateTime += delta;
+        if (state.isEnded(stateTime)) {
+            switch (state) {
+                case BREAK_FLOOR:
+                    floor.dropTile(x + getWidth() / 2, y + getHeight() / 2);
+                    break;
+            }
+            setState(State.STAND);
+        }
     }
 
     /**
@@ -157,6 +215,7 @@ public class Player {
                 setPosition(targetX, targetY);
                 vx = 0;
                 vy = 0;
+                setState(State.STAND);
             }
 
             return isTargetReached;

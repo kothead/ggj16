@@ -15,8 +15,8 @@ public class Floor {
 	private static final float FALL_SPEED = 10;
     private static final float RISE_SPEED = 3;
     private static final int MAX_FALLEN_TILES = 3;
-    private static final String TEXTURE_FLOOR = "floor";
-    private static final String TEXTURE_PIT = "pit";
+    private static final String TEXTURE_FLOOR = "floor-tile-v6";
+    private static final String TEXTURE_HOLE = "floor-tile-hole";
 
     private static final float BLOCKED = -1;
     private static final float INVISIBLE = 0;
@@ -27,7 +27,7 @@ public class Floor {
 
     private int width, height;
     private int tileWidth, tileHeight;
-    private TextureRegion textureFloor, texturePit, tetureGlow;
+    private TextureRegion textureFloor, textureHole, tetureGlow;
 
     private Rectangle visible;
 
@@ -43,7 +43,7 @@ public class Floor {
         rising = new Array<Integer>();
 
         textureFloor = ImageCache.getTexture(TEXTURE_FLOOR);
-        texturePit = ImageCache.getTexture(TEXTURE_PIT);
+        textureHole = ImageCache.getTexture(TEXTURE_HOLE);
         tileWidth = textureFloor.getRegionWidth();
         tileHeight = textureFloor.getRegionHeight();
 
@@ -95,6 +95,10 @@ public class Floor {
                         && tilex < width && tilex >= 0) {
 
                     float visibility = tiles[tiley][tilex];
+
+                    if (visibility >= INVISIBLE && visibility < VISIBLE) {
+                        batch.draw(textureHole, j, i, tileWidth, tileHeight);
+                    }
                     if (visibility > INVISIBLE) {
                         batch.draw(textureFloor, j, i + tileHeight * (visibility - VISIBLE), tileWidth, tileHeight);
                     }

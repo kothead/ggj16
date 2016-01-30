@@ -22,12 +22,20 @@ public class ImageCache {
         return atlas.findRegion(name, index);
     }
 
-    public static TextureRegion[] getFrames(String name, int offset, int count) {
+    public static TextureRegion[] getFrames(String name, int offset, int count, boolean flipx, boolean flipy) {
         TextureRegion[] regions = new TextureRegion[count];
         for (int i = offset, j = 0; i < count + offset; i++, j++) {
             regions[j] = getFrame(name, i);
+            if (flipx || flipy) {
+                regions[j] = new TextureRegion(regions[j]);
+                regions[j].flip(flipx, flipy);
+            }
         }
         return regions;
+    }
+
+    public static TextureRegion[] getFrames(String name, int offset, int count) {
+        return getFrames(name, offset, count, false, false);
     }
 
 }
