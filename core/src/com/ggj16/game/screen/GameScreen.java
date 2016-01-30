@@ -1,18 +1,22 @@
 package com.ggj16.game.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.ggj16.game.GGJGame;
 import com.ggj16.game.processor.InputProcessor;
 import com.ggj16.game.processor.ViewProcessor;
 import com.ggj16.game.state.GameStates;
 import com.ggj16.game.view.Floor;
+import com.ggj16.game.view.Player;
 
 /**
  * Created by kettricken on 30.01.2016.
@@ -26,6 +30,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
     float delay = 0; // delete after the real condition of game over is set
 
     private Floor floor;
+    private Player player;
 
     public GameScreen(GGJGame game) {
         super(game);
@@ -36,6 +41,9 @@ public class GameScreen extends BaseScreen implements Telegraph {
         sm.setInitialState(GameStates.GAME);
 
         floor = new Floor(16, 10);
+        player = new Player();
+        player.setX(floor.getWidthInPixels() / 2);
+        player.setY(floor.getHeightInPixels() / 2);
     }
 
     @Override
@@ -44,6 +52,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
         viewProcessor.initViews();
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer(new InputProcessor(GameScreen.this));
+        inputMultiplexer.addProcessor(new ControlProcess());
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
         Gdx.input.setCatchBackKey(true);
@@ -58,16 +67,25 @@ public class GameScreen extends BaseScreen implements Telegraph {
     @Override
     public void render(float delta) {
         super.render(delta);
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT );
 
+        // process block
         sm.update();
+        stage.act(delta);
+        player.process(delta);
+        getCamera().position.x = player.getX();
+        getCamera().position.y = player.getY();
+        getCamera().update();
+        batch().setProjectionMatrix(getCamera().combined);
+
+        // drawing block
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         batch().begin();
         floor.draw(batch(), 0, 0, (int) getWorldWidth(), (int) getWorldHeight());
+        player.draw(batch(), delta);
         batch().end();
 
-        stage.act(delta);
         stage.draw();
     }
 
@@ -106,9 +124,29 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
     public boolean hasEnded() {
         delay += Gdx.graphics.getDeltaTime();
-        if (delay >= 2) {
-            return true;
-        }
         return false;
+    }
+
+    private class ControlProcess extends InputAdapter {
+
+        private static final float DOUBLE_TAP_DELAY = 0.5f;
+
+        private float tapTime;
+
+        @Override
+        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            Camera camera = getCamera();
+
+//            float x = camera.position.x - camera.viewportWidth / 2
+//                    + screenX / (float) Gdx.graphics.getWidth() * getWorldWidth();
+//            float y = camera.position.y - camera.viewportHeight / 2
+//                    + (Gdx.graphics.getHeight() - screenY) / (float) Gdx.graphics.getHeight() * getWorldHeight();
+            Vector3 pos = new Vector3(screenX, screenY, 0);
+            getCamera().unproject(pos);
+
+            player.setTarget(Player.Action.GO, pos.x, pos.y);
+            return super.touchDown(screenX, screenY, pointer, button);
+        }
+
     }
 }

@@ -24,8 +24,7 @@ public class InputProcessor extends InputAdapter {
     }
 
     @Override
-    public boolean keyUp(int keycode)
-    {
+    public boolean keyUp(int keycode) {
         switch (keycode)
         {
             case Input.Keys.ESCAPE:
