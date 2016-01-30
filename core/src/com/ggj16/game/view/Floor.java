@@ -1,5 +1,6 @@
 package com.ggj16.game.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -103,15 +104,24 @@ public class Floor {
 //                // cut right
 //                visible.width -= tileWidth;
 //            }
+            Gdx.app.log("Test", "Vertical");
+            if (chalkLine.start.y < getHeightInPixels() / 2) {
+                visible.y += cutWidth;
+                visible.height -= cutWidth;
+            } else {
+                // cut top
+                visible.height -= cutWidth;
+            }
         }
         if (chalkLine.start.x == chalkLine.end.x) {
             // vertical
-            if (chalkLine.start.y < getHeightInPixels() / 2) {
-                //visible.y -= cutWidth;
-                visible.height -= tileHeight;
+            Gdx.app.log("Test", "Vertical");
+            if (chalkLine.start.x < getWidthInPixels() / 2) {
+                visible.x -= cutWidth;
+                visible.width -= cutWidth;
             } else {
                 // cut top
-                visible.height -= tileHeight;
+                visible.width -= cutWidth;
             }
         }
     }

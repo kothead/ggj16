@@ -16,7 +16,7 @@ public class ChalkPriest extends Priest {
     public ChalkPriest(Floor floor) {
         super();
         this.floor = floor;
-        this.direction = Direction.DOWN;//Direction.getDirections()[Utils.randInt(0, 4)];
+        this.direction = Direction.getDirections()[Utils.randInt(0, 4)];
         int side = Utils.randInt(0, 2);
         switch (direction) {
             case UP:
@@ -78,7 +78,7 @@ public class ChalkPriest extends Priest {
         if (getAction() == Action.ACT) {
             chalkLine.increase(SPEED * delta * direction.getDx(), SPEED * delta * direction.getDy());
         } else if (getAction() == Action.NONE) {
-            floor.cut(chalkLine);
+
         }
     }
 
@@ -112,6 +112,8 @@ public class ChalkPriest extends Priest {
                     setTarget(Action.ACT, floor.getVisibleRight(), getY());
                     break;
             }
+        } else if (action == Action.NONE) {
+            floor.cut(chalkLine);
         }
     }
 

@@ -3,7 +3,6 @@ package com.ggj16.game.processor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
-import com.ggj16.game.model.Direction;
 import com.ggj16.game.view.ChalkPriest;
 import com.ggj16.game.view.Floor;
 import com.ggj16.game.view.Priest;
@@ -25,11 +24,6 @@ public class PriestProcessor {
             if (priest instanceof ChalkPriest) {
                 ChalkPriest chalkPriest = (ChalkPriest) priest;
                 chalkPriest.process(delta);
-                if (chalkPriest.getDirection() == Direction.DOWN) {
-//                    if (chalkPriest.getChalkLine().getEnd().y >= floor.getVisibleTop()) {
-//                        floor.cut(chalkPriest.getChalkLine().getEnd().x, 0);
-//                    }
-                }
             }
         }
     }

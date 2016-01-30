@@ -1,69 +1,418 @@
 
 pack.png
-size: 1024,512
+size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 continue
   rotate: false
-  xy: 2, 126
+  xy: 459, 814
   size: 232, 67
   orig: 232, 67
   offset: 0, 0
   index: -1
 exit
   rotate: false
-  xy: 238, 126
+  xy: 622, 70
   size: 107, 67
   orig: 107, 67
   offset: 0, 0
   index: -1
 floor
   rotate: false
-  xy: 459, 207
+  xy: 374, 627
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+floor_tile
+  rotate: false
+  xy: 374, 627
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 1
+floor_tile
+  rotate: false
+  xy: 374, 503
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 2
+floor_tile_2_brighter
+  rotate: false
+  xy: 374, 379
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+floor_tile_Obstacle
+  rotate: false
+  xy: 374, 255
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+floor_tile_Obstacle_with_floor
+  rotate: false
+  xy: 374, 131
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+floor_tile_hole
+  rotate: false
+  xy: 374, 7
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
 game_over
   rotate: false
-  xy: 2, 197
+  xy: 2, 751
   size: 453, 130
   orig: 453, 130
   offset: 0, 0
   index: -1
 ghost
   rotate: false
-  xy: 894, 341
+  xy: 857, 753
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
+ghost-left
+  rotate: false
+  xy: 857, 753
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 1
+ghost-death
+  rotate: false
+  xy: 2, 507
+  size: 120, 240
+  orig: 120, 240
+  offset: 0, 0
+  index: 1
+ghost-death
+  rotate: false
+  xy: 2, 263
+  size: 120, 240
+  orig: 120, 240
+  offset: 0, 0
+  index: 2
+ghost-death
+  rotate: false
+  xy: 126, 507
+  size: 120, 240
+  orig: 120, 240
+  offset: 0, 0
+  index: 3
+ghost-death
+  rotate: false
+  xy: 2, 19
+  size: 120, 240
+  orig: 120, 240
+  offset: 0, 0
+  index: 4
+ghost-death
+  rotate: false
+  xy: 126, 263
+  size: 120, 240
+  orig: 120, 240
+  offset: 0, 0
+  index: 5
+ghost-death
+  rotate: false
+  xy: 250, 507
+  size: 120, 240
+  orig: 120, 240
+  offset: 0, 0
+  index: 6
+ghost-down
+  rotate: false
+  xy: 498, 690
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 1
+ghost-down
+  rotate: false
+  xy: 498, 566
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 2
+ghost-down
+  rotate: false
+  xy: 498, 566
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 4
+ghost-down
+  rotate: false
+  xy: 498, 442
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 3
+ghost-floor
+  rotate: false
+  xy: 250, 194
+  size: 120, 152
+  orig: 120, 152
+  offset: 0, 0
+  index: 2
+ghost-floor
+  rotate: false
+  xy: 498, 318
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 1
+ghost-floor
+  rotate: false
+  xy: 498, 194
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 4
+ghost-floor_3 — копия
+  rotate: false
+  xy: 498, 194
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+ghost-left
+  rotate: false
+  xy: 498, 70
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 2
+ghost-left
+  rotate: false
+  xy: 498, 70
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 4
+ghost-left
+  rotate: false
+  xy: 622, 637
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 3
+ghost-scream
+  rotate: false
+  xy: 250, 350
+  size: 120, 153
+  orig: 120, 153
+  offset: 0, 0
+  index: 4
+ghost-scream
+  rotate: false
+  xy: 250, 350
+  size: 120, 153
+  orig: 120, 153
+  offset: 0, 0
+  index: 5
+ghost-scream
+  rotate: false
+  xy: 250, 39
+  size: 120, 151
+  orig: 120, 151
+  offset: 0, 0
+  index: 3
+ghost-scream
+  rotate: false
+  xy: 894, 877
+  size: 120, 138
+  orig: 120, 138
+  offset: 0, 0
+  index: 2
+ghost-scream
+  rotate: false
+  xy: 894, 877
+  size: 120, 138
+  orig: 120, 138
+  offset: 0, 0
+  index: 6
+ghost-scream
+  rotate: false
+  xy: 622, 513
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 1
+ghost-scream
+  rotate: false
+  xy: 622, 513
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 7
+ghost-trapped
+  rotate: false
+  xy: 622, 389
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 1
+ghost-trapped
+  rotate: false
+  xy: 622, 265
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 2
+ghost-trapped
+  rotate: false
+  xy: 622, 141
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 3
+ghost-up
+  rotate: false
+  xy: 855, 629
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 1
+ghost-up
+  rotate: false
+  xy: 854, 505
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 2
+ghost-up
+  rotate: false
+  xy: 854, 505
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 4
+ghost-up
+  rotate: false
+  xy: 854, 381
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: 3
 pause
   rotate: false
-  xy: 606, 331
+  xy: 606, 885
   size: 284, 130
   orig: 284, 130
   offset: 0, 0
   index: -1
 pit
   rotate: false
-  xy: 583, 263
+  xy: 498, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 priest
   rotate: false
-  xy: 2, 2
+  xy: 854, 257
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
+priest-back
+  rotate: false
+  xy: 746, 513
+  size: 104, 120
+  orig: 104, 120
+  offset: 0, 0
+  index: 1
+priest-back
+  rotate: false
+  xy: 746, 389
+  size: 104, 120
+  orig: 104, 120
+  offset: 0, 0
+  index: 2
+priest-chalk
+  rotate: false
+  xy: 746, 265
+  size: 104, 120
+  orig: 104, 120
+  offset: 0, 0
+  index: 1
+priest-chalk
+  rotate: false
+  xy: 853, 133
+  size: 103, 120
+  orig: 103, 120
+  offset: 0, 0
+  index: 2
+priest-chalk-left
+  rotate: false
+  xy: 746, 141
+  size: 103, 120
+  orig: 103, 120
+  offset: 0, 0
+  index: 1
+priest-fear
+  rotate: false
+  xy: 695, 761
+  size: 158, 120
+  orig: 158, 120
+  offset: 0, 0
+  index: 3
+priest-fear
+  rotate: false
+  xy: 746, 637
+  size: 105, 120
+  orig: 105, 120
+  offset: 0, 0
+  index: 4
+priest-fear
+  rotate: false
+  xy: 733, 17
+  size: 103, 120
+  orig: 103, 120
+  offset: 0, 0
+  index: 1
+priest-fear
+  rotate: false
+  xy: 840, 9
+  size: 102, 120
+  orig: 102, 120
+  offset: 0, 0
+  index: 2
+priest_lasso
+  rotate: false
+  xy: 126, 19
+  size: 120, 240
+  orig: 120, 240
+  offset: 0, 0
+  index: -1
 title
   rotate: false
-  xy: 2, 331
+  xy: 2, 885
   size: 600, 130
   orig: 600, 130
   offset: 0, 0
   index: -1
+
+pack2.png
+size: 128,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+priest-chalk-left
+  rotate: false
+  xy: 2, 2
+  size: 101, 120
+  orig: 101, 120
+  offset: 0, 0
+  index: 2
