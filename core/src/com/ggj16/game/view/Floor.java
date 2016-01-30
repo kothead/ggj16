@@ -27,9 +27,9 @@ public class Floor {
     private Rectangle visible;
 
     public Floor(int width, int height) {
-        this.width = width;
-        this.height = height;
-        tiles = new float[height + 2][width + 2];
+        this.width = width + 2;
+        this.height = height + 2;
+        tiles = new float[this.height][this.width];
 
         textureFloor = ImageCache.getTexture(TEXTURE_FLOOR);
         texturePit = ImageCache.getTexture(TEXTURE_PIT);
@@ -46,14 +46,21 @@ public class Floor {
     }
 
     public void draw(Batch batch, int offsetX, int offsetY, int screenWidth, int screenHeight) {
-        int x = offsetX / tileWidth;
-        int y = offsetY / tileHeight;
-        offsetX = offsetX % tileWidth - tileWidth;
-        offsetY = offsetY % tileHeight - tileHeight;
+        // calculate viewport size
+        int startX = (offsetX / tileWidth - 1) * tileWidth;
+        int startY = (offsetY / tileHeight - 1) * tileHeight;
+        int endX = offsetX + screenWidth + tileWidth;
+        int endY = offsetY + screenHeight + tileHeight;
 
-        for (int i = offsetY; i <= screenHeight; i += tileHeight) {
-            for (int j = offsetX; j <= screenWidth; j += tileWidth) {
-                batch.draw(textureFloor, j, i, tileWidth, tileHeight);
+        for (int i = startY; i < endY; i += tileHeight) {
+            for (int j = startX; j < endX; j += tileWidth) {
+                int tiley = i / tileHeight;
+                int tilex = j / tileWidth;
+                if (tiley < height && tiley >= 0
+                        && tilex < width && tilex >= 0
+                        && tiles[tiley][tilex] == VISIBLE) {
+                    batch.draw(textureFloor, j, i, tileWidth, tileHeight);
+                }
             }
         }
     }

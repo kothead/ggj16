@@ -92,7 +92,9 @@ public class GameScreen extends BaseScreen implements Telegraph {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         batch().begin();
-        floor.draw(batch(), 0, 0, (int) getWorldWidth(), (int) getWorldHeight());
+        floor.draw(batch(), (int) (getCamera().position.x - getCamera().viewportWidth / 2),
+                (int) (getCamera().position.y - getCamera().viewportHeight / 2),
+                (int) getWorldWidth(), (int) getWorldHeight());
         player.draw(batch(), delta);
         batch().end();
 
