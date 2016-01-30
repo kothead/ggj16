@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.ggj16.game.data.ImageCache;
 
 /**
@@ -42,14 +43,25 @@ public class Player {
         }
     }
 
+    private Floor floor;
     private float x, y, targetX, targetY;
     private float vx, vy;
     private Action action = Action.NONE;
     private State state;
     private float stateTime;
+    private Rectangle boundingBox = new Rectangle();
 
-    public Player() {
+    public Player(Floor floor) {
         setState(State.STAND);
+        this.floor = floor;
+    }
+
+    public int getWidth() {
+        return getStateFrame().getRegionWidth();
+    }
+
+    public int getHeight() {
+        return getStateFrame().getRegionHeight();
     }
 
     public float getX() {
@@ -82,11 +94,10 @@ public class Player {
             if (path > 0) {
                 vx = diffX / path * SPEED;
                 vy = diffY / path * SPEED;
-
-                this.action = action;
-                targetX = x;
-                targetY = y;
             }
+            this.action = action;
+            targetX = x;
+            targetY = y;
         }
     }
 
@@ -101,6 +112,7 @@ public class Player {
                     break;
 
                 case BREAK_FLOOR:
+                    floor.dropTile(x + getWidth() / 2, y + getHeight() / 2);
                     break;
             }
             action = Action.NONE;
@@ -110,6 +122,12 @@ public class Player {
     public void draw(Batch batch, float delta) {
         TextureRegion region = getStateFrame();
         batch.draw(region, x, y, region.getRegionWidth(), region.getRegionHeight());
+    }
+
+    public Rectangle getBoundingBox() {
+        TextureRegion region = getStateFrame();
+        boundingBox.set(x, y, region.getRegionWidth(), region.getRegionHeight());
+        return boundingBox;
     }
 
     private void setState(State state) {
@@ -129,7 +147,7 @@ public class Player {
      * @return whether target is reached or not
      */
     private boolean updatePosition(float delta) {
-        if (vx != 0 || vy != 0) {
+        if (action != Action.NONE) {
             setPosition(getX() + vx * delta, getY() + vy * delta);
             float diffX = x - targetX;
             float diffY = y - targetY;
