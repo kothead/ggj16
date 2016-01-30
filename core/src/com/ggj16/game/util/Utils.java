@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.ai.msg.Telegraph;
 
+import java.util.Random;
+
 public class Utils {
 
     public static boolean isLandscape() {
@@ -20,5 +22,13 @@ public class Utils {
                 sender,
                 receiver,
                 messageType);
+    }
+
+    public static int randInt(int min, int max) {
+        Random rand = new Random(100);
+
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+
+        return randomNum;
     }
 }

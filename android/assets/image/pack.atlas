@@ -6,56 +6,63 @@ filter: Nearest,Nearest
 repeat: none
 continue
   rotate: false
-  xy: 2, 73
+  xy: 2, 126
   size: 232, 67
   orig: 232, 67
   offset: 0, 0
   index: -1
 exit
   rotate: false
-  xy: 2, 2
+  xy: 238, 126
   size: 107, 67
   orig: 107, 67
   offset: 0, 0
   index: -1
 floor
   rotate: false
-  xy: 459, 154
+  xy: 459, 207
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
 game_over
   rotate: false
-  xy: 2, 144
+  xy: 2, 197
   size: 453, 130
   orig: 453, 130
   offset: 0, 0
   index: -1
 ghost
   rotate: false
-  xy: 894, 288
+  xy: 894, 341
   size: 120, 120
   orig: 120, 120
   offset: 0, 0
   index: -1
 pause
   rotate: false
-  xy: 606, 278
+  xy: 606, 331
   size: 284, 130
   orig: 284, 130
   offset: 0, 0
   index: -1
 pit
   rotate: false
-  xy: 238, 76
+  xy: 583, 263
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
+priest
+  rotate: false
+  xy: 2, 2
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
 title
   rotate: false
-  xy: 2, 278
+  xy: 2, 331
   size: 600, 130
   orig: 600, 130
   offset: 0, 0

@@ -13,11 +13,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.ggj16.game.GGJGame;
-import com.ggj16.game.processor.CutProcessor;
 import com.ggj16.game.processor.InputProcessor;
+import com.ggj16.game.processor.PriestProcessor;
 import com.ggj16.game.processor.ViewProcessor;
 import com.ggj16.game.state.GameStates;
-import com.ggj16.game.view.ChalkPriest;
 import com.ggj16.game.view.Floor;
 import com.ggj16.game.view.Player;
 
@@ -35,7 +34,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
     private Floor floor;
     private Player player;
 
-    private CutProcessor cutProcessor;
+    private PriestProcessor priestProcessor;
     private ShapeRenderer shapeRenderer = new ShapeRenderer(); // delete if the final fog will not need this
 
     public GameScreen(GGJGame game) {
@@ -51,9 +50,8 @@ public class GameScreen extends BaseScreen implements Telegraph {
         player.setX(floor.getWidthInPixels() / 2);
         player.setY(floor.getHeightInPixels() / 2);
 
-        cutProcessor = new CutProcessor(floor);
-        ChalkPriest priest = new ChalkPriest();
-        cutProcessor.addPriest(priest);
+        priestProcessor = new PriestProcessor(floor);
+        priestProcessor.generatePriest();
     }
 
     @Override
@@ -85,7 +83,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
         updateCameraPosition();
         shapeRenderer.setProjectionMatrix(getCamera().combined);
 
-        cutProcessor.update(delta);
+        priestProcessor.update(delta);
 
         // drawing block
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -96,11 +94,12 @@ public class GameScreen extends BaseScreen implements Telegraph {
                 (int) (getCamera().position.y - getCamera().viewportHeight / 2),
                 (int) getWorldWidth(), (int) getWorldHeight());
         player.draw(batch(), delta);
+        priestProcessor.draw(batch());
         batch().end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         // draw line
-        cutProcessor.draw(shapeRenderer);
+        priestProcessor.draw(shapeRenderer);
         // draw fog
         floor.draw(shapeRenderer, 0, 0, (int) getWorldWidth(), (int) getWorldHeight());
         shapeRenderer.end();

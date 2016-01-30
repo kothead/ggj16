@@ -26,6 +26,8 @@ public class Floor {
 
     private Rectangle visible;
 
+    private final float cutWidth = 60;
+
     public Floor(int width, int height) {
         width += 2;
         height += 2;
@@ -44,7 +46,7 @@ public class Floor {
             }
         }
 
-        visible = new Rectangle(0, 0, getWidthInPixels(), getHeightInPixels());
+        visible = new Rectangle(tileWidth, tileHeight, getWidthInPixels() - tileWidth * 2, getHeightInPixels() - tileHeight * 2);
     }
 
     public void draw(Batch batch, int offsetX, int offsetY, int screenWidth, int screenHeight) {
@@ -84,30 +86,28 @@ public class Floor {
     }
 
     public void draw(ShapeRenderer shapeRenderer, int offsetX, int offsetY, int screenWidth, int screenHeight) {
-        offsetX = offsetX % tileWidth - tileWidth;
-        offsetY = offsetY % tileHeight - tileHeight;
-
         // x, y are the bottom left corner
         shapeRenderer.set(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(1, 0, 0, 1);
-        shapeRenderer.rect(offsetX + visible.x, offsetY + visible.y, visible.width, visible.height);
+        shapeRenderer.rect(visible.x, visible.y, visible.width, visible.height);
     }
 
-    public void cut(float tileX, float tileY) {
-        if (tileX != 0) {
-            if (tileX < getWidthInPixels() / 2) {
-                // cut left
-                visible.x += tileWidth;
-                visible.width -= tileWidth;
-            } else {
-                // cut right
-                visible.width -= tileWidth;
-            }
+    public void cut(ChalkLine chalkLine) {
+        if (chalkLine.start.y == chalkLine.end.y) {
+            // horizontal
+//            if (tileX < getWidthInPixels() / 2) {
+//                // cut left
+//                visible.x += tileWidth;
+//                visible.width -= tileWidth;
+//            } else {
+//                // cut right
+//                visible.width -= tileWidth;
+//            }
         }
-        if (tileY != 0) {
-            if (tileY < getHeightInPixels() / 2) {
-                // cut bottom
-                visible.y -= tileHeight;
+        if (chalkLine.start.x == chalkLine.end.x) {
+            // vertical
+            if (chalkLine.start.y < getHeightInPixels() / 2) {
+                //visible.y -= cutWidth;
                 visible.height -= tileHeight;
             } else {
                 // cut top
@@ -118,5 +118,29 @@ public class Floor {
 
     public float getVisibleTop() {
         return visible.y + visible.height;
+    }
+
+    public float getVisibleBottom() {
+        return visible.y;
+    }
+
+    public float getVisibleRight() {
+        return visible.x + visible.getWidth();
+    }
+
+    public float getVisibleLeft() {
+        return visible.x;
+    }
+
+    public int getTileWidth() {
+        return tileWidth;
+    }
+
+    public int getTileHeight() {
+        return tileHeight;
+    }
+
+    public float getCutWidth() {
+        return cutWidth;
     }
 }
