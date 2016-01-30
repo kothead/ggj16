@@ -283,14 +283,14 @@ priest-lasso
   size: 120, 240
   orig: 120, 240
   offset: 0, 0
-  index: -1
-priest-lasso-2
+  index: 1
+priest-lasso
   rotate: false
   xy: 2, 172
   size: 120, 240
   orig: 120, 240
   offset: 0, 0
-  index: -1
+  index: 2
 title
   rotate: false
   xy: 366, 890

@@ -86,6 +86,8 @@ public class LassoPriest extends Priest {
 
         } else if (action == Action.NONE) {
             setRandomTargetPosition(Action.IDLE_RUN);
+        } else if (action == Action.ACTING) {
+            setState(State.MAGNET);
         }
     }
 }
