@@ -119,6 +119,8 @@ public class Floor {
                 }
             }
         }
+
+
     }
 
     public void dropTile(float posx, float posy) {
@@ -159,6 +161,9 @@ public class Floor {
     }
 
     public void cut(ChalkLine chalkLine) {
+        if (chalkLine == null) {
+            return;
+        }
         if (chalkLine.start.y == chalkLine.end.y) {
             if (chalkLine.start.y < getHeightInPixels() / 2) {
                 if (visible.y < chalkLine.start.y) {

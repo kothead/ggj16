@@ -17,8 +17,8 @@ import java.util.Iterator;
  */
 public class PriestProcessor {
 
-    private static final int PANIC_HALF_WIDTH = 200;
-    private static final int PANIC_HALF_HEIGHT = 200;
+    private static final int PANIC_HALF_WIDTH = 300;
+    private static final int PANIC_HALF_HEIGHT = 300;
     Array<Priest> priests = new Array<Priest>();
     Floor floor;
     GameScreen gameScreen;
@@ -86,7 +86,7 @@ public class PriestProcessor {
                 PANIC_HALF_WIDTH * 2, PANIC_HALF_HEIGHT * 2);
         for (Priest priest: priests) {
             if (panicAttack.contains(priest.getX(), priest.getY())) {
-                priest.panicStrike();
+                priest.panicStrike(x, y);
             }
         }
     }

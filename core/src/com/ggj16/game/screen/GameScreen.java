@@ -28,12 +28,14 @@ import com.ggj16.game.view.Priest;
  */
 public class GameScreen extends BaseScreen implements Telegraph {
 
+    private static final float GET_LOOSE_COUNT = 10;
+
     private Stage stage;
     private OrthographicCamera stageCamera;
     private ViewProcessor viewProcessor;
     private StateMachine sm;
 
-    float delay = 0; // delete after the real condition of game over is set
+    float trappedCount = 0;
 
     private Floor floor;
     private Player player;
@@ -168,7 +170,6 @@ public class GameScreen extends BaseScreen implements Telegraph {
     }
 
     public boolean hasEnded() {
-        delay += Gdx.graphics.getDeltaTime();
         return false;
     }
 
@@ -206,6 +207,18 @@ public class GameScreen extends BaseScreen implements Telegraph {
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
             if (sm.getCurrentState() != GameStates.GAME) {
                 return false;
+            }
+
+            Gdx.app.log("Test", "action " + player.getAction());
+
+            if (player.getAction() == Player.Action.TRAPPED) {
+                trappedCount++;
+                if (trappedCount >= GET_LOOSE_COUNT) {
+                    player.release();
+                    trappedCount = 0;
+                } else {
+                    return false;
+                }
             }
 
 //            float x = camera.position.x - camera.viewportWidth / 2

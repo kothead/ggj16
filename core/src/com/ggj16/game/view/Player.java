@@ -18,8 +18,6 @@ public class Player {
     private static final float SPEED = 600;
     private static final float TRAPPED_SPEED = 200;
 
-
-
     public enum Action {
         NONE, GO, SCARE, BREAK_FLOOR, TRAPPED
     }
@@ -180,17 +178,19 @@ public class Player {
         if (action != Action.NONE && updatePosition(delta)) {
             switch (action) {
                 case GO:
+                    action = Action.NONE;
                     break;
 
                 case SCARE:
                     setState(State.SCREAM);
+                    action = Action.NONE;
                     break;
 
                 case BREAK_FLOOR:
                     setState(State.BREAK_FLOOR);
+                    action = Action.NONE;
                     break;
             }
-            action = Action.NONE;
         }
     }
 
@@ -231,6 +231,7 @@ public class Player {
                     break;
 
                 case TRAPPED:
+                    setState(State.STAND);
                     break;
 
 //                case DYING:
@@ -257,7 +258,9 @@ public class Player {
                 setPosition(targetX, targetY);
                 vx = 0;
                 vy = 0;
-                setState(State.STAND);
+                if (action != Action.TRAPPED) {
+                    setState(State.STAND);
+                }
             }
 
             return isTargetReached;
@@ -276,6 +279,10 @@ public class Player {
 
     public void release() {
         action = Action.NONE;
+    }
+
+    public Action getAction() {
+        return action;
     }
 
 }

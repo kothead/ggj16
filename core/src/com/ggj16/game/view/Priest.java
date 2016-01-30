@@ -1,6 +1,5 @@
 package com.ggj16.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -97,8 +96,6 @@ public class Priest {
     private Rectangle boundingBox = new Rectangle();
 
     private Action action = Action.RUN;
-
-    private float panicTime = 0;
 
     public Priest(Floor floor) {
         this.floor = floor;
@@ -249,6 +246,10 @@ public class Priest {
                         }
                         break;
 
+                    case PANIC:
+                        setState(State.FEAR_RUN);
+                        break;
+
                     case NONE:
                         setState(State.STAND);
                         break;
@@ -260,8 +261,21 @@ public class Priest {
         }
     }
 
-    public void panicStrike() {
-        setRandomTargetPosition(Action.PANIC);
+    public float getCenterX() {
+        return x + getWidth() / 2;
+    }
+
+    public float getCenterY() {
+        return y + getHeight() / 2;
+    }
+
+    public void panicStrike(float x, float y) {
+        float ratio = 2.5f;
+
+        float x3 = ratio * getCenterX() + (1 - ratio) * x; // find point that divides the segment
+        float y3 = ratio * getCenterY() + (1 - ratio) * y; //into the ratio (1-r):r
+
+        setTarget(Action.PANIC, x3, y3);
     }
 
     public void fall() {
@@ -298,6 +312,8 @@ public class Priest {
                     setAction(Action.ACT);
                 } else if (action == Action.ACT || action == Action.IDLE_RUN) {
                     setAction(Action.NONE);
+                } else if (action == Action.PANIC) {
+                    setRandomTargetPosition(Action.IDLE_RUN);
                 }
             }
 

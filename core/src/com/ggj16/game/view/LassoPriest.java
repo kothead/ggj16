@@ -11,7 +11,7 @@ public class LassoPriest extends Priest {
 
     private static final float VISIBILITY_DISTANCE = 500;
     private static final float LASSO_DISTANCE = 60;
-    private static final float ACTING_TIME = 2;
+    private static final float ACTING_TIME = 5;
     GameScreen gameScreen;
 
     float actingTimer = 0;
