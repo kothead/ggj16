@@ -72,10 +72,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
         sm.update();
         stage.act(delta);
         player.process(delta);
-        getCamera().position.x = player.getX();
-        getCamera().position.y = player.getY();
-        getCamera().update();
-        batch().setProjectionMatrix(getCamera().combined);
+        updateCameraPosition();
 
         // drawing block
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -127,6 +124,31 @@ public class GameScreen extends BaseScreen implements Telegraph {
     public boolean hasEnded() {
         delay += Gdx.graphics.getDeltaTime();
         return false;
+    }
+
+    private void updateCameraPosition() {
+        float x = player.getX();
+        float y = player.getY();
+        float halfWidth = getCamera().viewportWidth / 2f;
+        float halfHeight = getCamera().viewportHeight / 2f;
+
+        if (x - halfWidth < 0) {
+            x = halfWidth;
+        } else if (x + halfWidth > floor.getWidthInPixels()) {
+            x = floor.getWidthInPixels() - halfWidth;
+            Gdx.app.log("WIDTH", floor.getWidthInPixels() + " " + halfWidth + " " + x);
+        }
+
+        if (y - halfHeight < 0) {
+            y = halfHeight;
+        } else if (y + halfHeight > floor.getHeightInPixels()) {
+            y = floor.getHeightInPixels() - halfHeight;
+        }
+
+        getCamera().position.x = x;
+        getCamera().position.y = y;
+        getCamera().update();
+        batch().setProjectionMatrix(getCamera().combined);
     }
 
     private class ControlProcess extends InputAdapter {
