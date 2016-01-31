@@ -1,6 +1,5 @@
 package com.ggj16.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -55,7 +54,7 @@ public class Floor {
 
         initFloor();
 
-        visible = new Rectangle(tileWidth * 2, tileHeight * 2, getWidthInPixels() - tileWidth * 3, getHeightInPixels() - tileHeight * 3);
+        visible = new Rectangle(tileWidth, tileHeight, getWidthInPixels() - tileWidth * 2, getHeightInPixels() - tileHeight * 2);
     }
 
     public void initFloor() {

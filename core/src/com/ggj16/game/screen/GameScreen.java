@@ -57,11 +57,11 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
         floor = new Floor(16, 10);
         player = new Player(this);
-        player.setX(floor.getWidthInPixels() / 2);
-        player.setY(floor.getHeightInPixels() / 2);
+        player.setX(floor.getWidthInPixels() / 2 - player.getWidth() / 2);
+        player.setY(floor.getHeightInPixels() / 2 - player.getHeight() / 2);
 
         priestProcessor = new PriestProcessor(floor, this);
-        priestProcessor.generatePriests(4);
+        priestProcessor.startWave();
 
         portal = new Portal(this);
     }
@@ -173,13 +173,8 @@ public class GameScreen extends BaseScreen implements Telegraph {
     public void restart() {
         floor.initFloor();
         priestProcessor.clear();
-        priestProcessor.generatePriests(3);
+        priestProcessor.startWave();
         player.reset();
-
-    }
-
-    public boolean hasEnded() {
-        return false;
     }
 
     private void updateCameraPosition() {

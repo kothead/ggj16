@@ -11,17 +11,6 @@ import com.ggj16.game.screen.GameScreen;
 public enum GameStates implements State<GameScreen> {
 
     GAME() {
-        @Override
-        public void enter(GameScreen entity) {
-            Gdx.app.log("Test", "GAME enter");
-        }
-
-        @Override
-        public void update(GameScreen entity) {
-            if (entity.hasEnded()) {
-                entity.getStateMachine().changeState(GAME_OVER);
-            }
-        }
 
         @Override
         public boolean onMessage(GameScreen entity, Telegram telegram) {
@@ -35,13 +24,11 @@ public enum GameStates implements State<GameScreen> {
     PAUSE() {
         @Override
         public void enter(GameScreen entity) {
-            Gdx.app.log("Test", "PAUSE enter");
             entity.getViewProcessor().showPauseTable();
         }
 
         @Override
         public void exit(GameScreen entity) {
-            Gdx.app.log("Test", "PAUSE exit");
             entity.getViewProcessor().hidePauseTable();
         }
 
@@ -58,21 +45,21 @@ public enum GameStates implements State<GameScreen> {
     GAME_OVER() {
         @Override
         public void enter(GameScreen entity) {
-            Gdx.app.log("Test", "GAME_OVER enter");
+            Gdx.app.log("Test", "Game Over enter");
             entity.getViewProcessor().showGameOverTable();
         }
 
         @Override
         public void exit(GameScreen entity) {
-            Gdx.app.log("Test", "GAME_OVER exit");
+            Gdx.app.log("Test", "Game Over exit");
             entity.getViewProcessor().hideGameOverTable();
         }
 
         @Override
         public boolean onMessage(GameScreen entity, Telegram telegram) {
             if (telegram.message == MessageType.TAP) {
-                entity.restart();
                 entity.getStateMachine().changeState(GameStates.GAME);
+                entity.restart();
             } else if (telegram.message == MessageType.BACK_PRESS) {
                 entity.getGame().exit();
             }
