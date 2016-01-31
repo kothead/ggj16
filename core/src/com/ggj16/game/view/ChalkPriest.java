@@ -58,7 +58,8 @@ public class ChalkPriest extends Priest {
         super.process(delta);
         super.updatePosition(delta);
         if (getAction() == Action.ACT) {
-            chalkLine.increase(SPEED * delta * direction.getDx(), SPEED * delta * direction.getDy());
+            chalkLine.increase(SPEED * delta * direction.getDx(),
+                    SPEED * delta * direction.getDy());
         }
     }
 

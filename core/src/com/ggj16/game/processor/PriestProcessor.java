@@ -48,7 +48,7 @@ public class PriestProcessor {
     public void update(float delta) {
         if (priests.size == 0) {
             waveDelay += delta;
-            if (delta >= WAVE_PAUSE) {
+            if (waveDelay >= WAVE_PAUSE) {
                 startWave();
                 waveDelay = 0;
             }
