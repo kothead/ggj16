@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.ggj16.game.data.ImageCache;
+import com.ggj16.game.data.MusicCache;
 import com.ggj16.game.data.SkinCache;
 import com.ggj16.game.data.SoundCache;
 import com.ggj16.game.screen.MenuScreen;
@@ -28,6 +29,7 @@ public class GGJGame extends Game {
 	public void dispose() {
 		Screen screen = getScreen();
 		if (screen != null) screen.dispose();
+		MusicCache.dispose();
 		super.dispose();
 	}
 

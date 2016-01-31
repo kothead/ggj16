@@ -25,7 +25,7 @@ public class TiledSprite extends Sprite {
     public void draw(Batch batch, int offsetX, int offsetY) {
         offsetX = offsetX % getRegionWidth() - getRegionWidth();
         offsetY = offsetY % getRegionHeight() - getRegionHeight();
-        for (float i = getY() + offsetY; i < getY() + getHeight(); i += getRegionHeight()) {
+        for (float i = getY() + offsetY; i < getY() + 2 * getHeight(); i += getRegionHeight()) {
             for (float j = getX() + offsetX; j < getX() + getWidth(); j += getRegionWidth()) {
                 batch.draw(getTexture(), j, i, getRegionWidth(), getRegionHeight(),
                         getU(), getV(), getU2(), getV2());
