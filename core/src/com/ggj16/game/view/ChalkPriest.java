@@ -1,6 +1,5 @@
 package com.ggj16.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ggj16.game.model.Direction;
 import com.ggj16.game.screen.GameScreen;
@@ -53,8 +52,6 @@ public class ChalkPriest extends Priest {
         if (setInitialPosition)
             setInitialPosition();
         setRunTargetPosition(side);
-
-        Gdx.app.log("Test", "ChalkLIne " + chalkLine);
     }
 
     @Override
