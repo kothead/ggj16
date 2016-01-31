@@ -25,6 +25,7 @@ public class MenuScreen extends BaseScreen {
         stage = new Stage(getViewport());
         background = new TiledSprite(ImageCache.getTexture(TEXTURE_BACKGROUND));
         background.setSize(getWorldWidth(), getWorldHeight());
+        background.setPosition(0, 0);
     }
 
     @Override
