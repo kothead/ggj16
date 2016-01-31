@@ -67,7 +67,6 @@ public class Floor {
         visible = new Rectangle(tileWidth, tileHeight, getWidthInPixels() - tileWidth * 2, getHeightInPixels() - tileHeight * 2);
 
         falling.clear();
-        rising.clear();
     }
 
     public void process(float delta) {
@@ -233,10 +232,14 @@ public class Floor {
     }
 
     public boolean isPentagramCircled() {
-        if (visible.getWidth() + cutWidth <= tileWidth * 3 && visible.getHeight() + cutWidth <= tileHeight * 3) {
-            return true;
+        if (getVisibleLeft() < getWidthInPixels() / 2 - tileWidth ||
+                getVisibleRight() > getWidthInPixels() / 2 + tileWidth ||
+                getVisibleTop() > getHeightInPixels() / 2 + tileWidth ||
+                getVisibleBottom() < getHeightInPixels() / 2 - tileWidth) {
+        //if (visible.getWidth() + cutWidth <= tileWidth * 3 && visible.getHeight() + cutWidth <= tileHeight * 3) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public float getLeftVisibleWidth() {
