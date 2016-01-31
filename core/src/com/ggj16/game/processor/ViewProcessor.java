@@ -48,7 +48,7 @@ public class ViewProcessor {
         Image continueBtn = new Image(ImageCache.getTexture("continue"));
         Image exitBtn = new Image(ImageCache.getTexture("exit"));
         restart = new Image(ImageCache.getTexture("tap-to-restart"));
-        wave = new Label(String.format("New Wave %d", gameScreen.getWaveCount()), SkinCache.getDefaultSkin());
+        wave = new Label(String.format("WAVE %d", gameScreen.getWaveCount()), SkinCache.getDefaultSkin());
         wave.getStyle().font.getData().scale(0.7f);
         wave.getStyle().fontColor = new Color(1f, 0.6f, 0.1f, 1);
         gameOverTable.add(gameOver);
@@ -125,7 +125,7 @@ public class ViewProcessor {
     public void showWaveTable(Action action) {
         stage.addActor(waveTable);
         if (wave != null)
-            wave.setText(String.format("NEW WAVE %d", gameScreen.getWaveCount()));
+            wave.setText(String.format("WAVE %d", gameScreen.getWaveCount()));
         waveTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.20f), action, Actions.delay(2f),
                 Actions.fadeOut(0.20f)));
     }
