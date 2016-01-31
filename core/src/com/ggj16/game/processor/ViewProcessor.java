@@ -1,5 +1,6 @@
 package com.ggj16.game.processor;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -28,7 +29,8 @@ public class ViewProcessor {
     private Table waveTable = new Table();
 
     private Image gameOver;
-    private Label restart;
+    private Image restart;
+    private Label wave;
 
     private boolean restartEnabled = false;
 
@@ -41,12 +43,14 @@ public class ViewProcessor {
         gameOverTable.setFillParent(true);
         pauseTable.setFillParent(true);
         waveTable.setFillParent(true);
-        gameOver = new Image(ImageCache.getTexture("game_over"));
+        gameOver = new Image(ImageCache.getTexture("game-over"));
         Image pause = new Image(ImageCache.getTexture("pause"));
         Image continueBtn = new Image(ImageCache.getTexture("continue"));
         Image exitBtn = new Image(ImageCache.getTexture("exit"));
-        restart = new Label("Tap to restart", SkinCache.getDefaultSkin());
-        Image wave = new Image(ImageCache.getTexture("wave"));
+        restart = new Image(ImageCache.getTexture("tap-to-restart"));
+        wave = new Label(String.format("New Wave %d", gameScreen.getWaveCount()), SkinCache.getDefaultSkin());
+        wave.getStyle().font.getData().scale(0.7f);
+        wave.getStyle().fontColor = new Color(1f, 0.6f, 0.1f, 1);
         gameOverTable.add(gameOver);
         gameOverTable.row();
         gameOverTable.add(restart);
@@ -120,7 +124,9 @@ public class ViewProcessor {
 
     public void showWaveTable(Action action) {
         stage.addActor(waveTable);
-        waveTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.20f), action, Actions.delay(0.5f),
+        if (wave != null)
+            wave.setText(String.format("NEW WAVE %d", gameScreen.getWaveCount()));
+        waveTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.20f), action, Actions.delay(2f),
                 Actions.fadeOut(0.20f)));
     }
 

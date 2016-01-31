@@ -3,15 +3,14 @@ package com.ggj16.game.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.ggj16.game.GGJGame;
 import com.ggj16.game.data.ImageCache;
-import com.ggj16.game.data.SkinCache;
 import com.ggj16.game.model.TiledSprite;
 
 public class MenuScreen extends BaseScreen {
@@ -31,8 +30,9 @@ public class MenuScreen extends BaseScreen {
     @Override
     public void show() {
         super.show();
-        Image title = new Image(ImageCache.getTexture("title"));
-        final Label tap = new Label("Tap to continue", SkinCache.getDefaultSkin());
+
+        Image title = new Image(new Texture(Gdx.files.internal("image/title.png")));
+        final Image tap = new Image(ImageCache.getTexture("tap-to-start"));
 
         Table table = new Table();
         table.setFillParent(true);

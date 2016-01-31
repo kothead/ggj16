@@ -42,6 +42,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
     private PriestProcessor priestProcessor;
     private ShapeRenderer shapeRenderer = new ShapeRenderer(); // delete if the final fog will not need this
+    private int waveCount = 0;
 
     public GameScreen(GGJGame game) {
         super(game);
@@ -176,6 +177,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
     }
 
     public void restart() {
+        waveCount = 0;
         floor.initFloor();
         priestProcessor.clear();
         priestProcessor.startWave();
@@ -209,6 +211,14 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public int getWaveCount() {
+        return waveCount;
+    }
+
+    public void incrementWave() {
+        waveCount++;
     }
 
     private class ControlProcess extends InputAdapter {

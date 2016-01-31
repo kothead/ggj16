@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class ChalkLine {
 
+    private static final int WIDTH = 6;
+
     Vector2 start = new Vector2();
     Vector2 end = new Vector2();
 
@@ -24,7 +26,7 @@ public class ChalkLine {
         shapeRenderer.setAutoShapeType(true);
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(1, 1, 1, 1);
-        shapeRenderer.rectLine(start.x, start.y, end.x, end.y, 3);
+        shapeRenderer.rectLine(start.x, start.y, end.x, end.y, WIDTH);
     }
 
     public Vector2 getEnd() {

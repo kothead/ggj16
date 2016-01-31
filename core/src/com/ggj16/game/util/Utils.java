@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class Utils {
 
-    private static Random rand = new Random(100);
+    private static Random rand = new Random();
 
     public static boolean isLandscape() {
         return Gdx.input.getNativeOrientation() == Input.Orientation.Landscape

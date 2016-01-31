@@ -148,7 +148,7 @@ public abstract class Priest {
                 case CHALK_LEFT:
                 case CHALK_RIGHT:
                 case CHALK_UP:
-                    SoundCache.play(SoundCache.SOUND_DRAWING);
+                    //SoundCache.play(SoundCache.SOUND_DRAWING);
                     break;
             }
         }
