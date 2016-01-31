@@ -20,9 +20,9 @@ public enum GameStates implements State<GameScreen> {
 
         @Override
         public void update(GameScreen entity) {
-            if (entity.hasEnded()) {
-                entity.getStateMachine().changeState(GAME_OVER);
-            }
+//            if (entity.hasEnded()) {
+//                entity.getStateMachine().changeState(GAME_OVER);
+//            }
         }
 
         @Override
@@ -44,7 +44,6 @@ public enum GameStates implements State<GameScreen> {
 
         @Override
         public void exit(GameScreen entity) {
-            Gdx.app.log("Test", "PAUSE exit");
             entity.getViewProcessor().hidePauseTable();
         }
 
@@ -68,15 +67,15 @@ public enum GameStates implements State<GameScreen> {
 
         @Override
         public void exit(GameScreen entity) {
-            Gdx.app.log("Test", "GAME_OVER exit");
+            Gdx.app.log("Test", "Game Over exit");
             entity.getViewProcessor().hideGameOverTable();
         }
 
         @Override
         public boolean onMessage(GameScreen entity, Telegram telegram) {
             if (telegram.message == MessageType.TAP) {
-                entity.restart();
                 entity.getStateMachine().changeState(GameStates.GAME);
+                entity.restart();
             } else if (telegram.message == MessageType.BACK_PRESS) {
                 entity.getGame().exit();
             }

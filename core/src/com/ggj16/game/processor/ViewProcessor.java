@@ -1,7 +1,6 @@
 package com.ggj16.game.processor;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -25,6 +24,7 @@ public class ViewProcessor {
 
     private Table pauseTable = new Table();
     private Table gameOverTable = new Table();
+    private Table waveTable = new Table();
 
     public ViewProcessor(GameScreen gameScreen, Stage stage) {
         this.stage = stage;
@@ -34,11 +34,13 @@ public class ViewProcessor {
     public void initViews() {
         gameOverTable.setFillParent(true);
         pauseTable.setFillParent(true);
+        waveTable.setFillParent(true);
         Image gameOver = new Image(ImageCache.getTexture("game_over"));
         Image pause = new Image(ImageCache.getTexture("pause"));
         Image continueBtn = new Image(ImageCache.getTexture("continue"));
         Image exitBtn = new Image(ImageCache.getTexture("exit"));
         Label restart = new Label("Tap to restart", SkinCache.getDefaultSkin());
+        Image wave = new Image(ImageCache.getTexture("wave"));
         gameOverTable.add(gameOver);
         gameOverTable.row();
         gameOverTable.add(restart);
@@ -46,6 +48,7 @@ public class ViewProcessor {
         pauseTable.row();
         pauseTable.add(continueBtn).spaceRight(50);
         pauseTable.add(exitBtn);
+        waveTable.add(wave).center();
 
         continueBtn.addListener(new ClickListener() {
             @Override
@@ -62,6 +65,9 @@ public class ViewProcessor {
                 gameScreen.getGame().exit();
             }
         });
+
+        gameOverTable.addAction(Actions.alpha(0));
+        stage.addActor(gameOverTable);
     }
 
     public void showPauseTable() {
@@ -74,22 +80,16 @@ public class ViewProcessor {
     }
 
     public void showGameOverTable() {
-        stage.addActor(gameOverTable);
-        Actor gameOver = gameOverTable.getChildren().get(0);
-        final Actor tap = gameOverTable.getChildren().get(1);
-        Action act = new Action(){
-            @Override
-            public boolean act(float delta) {
-                tap.addAction(Actions.alpha(1));
-                return false;
-            }
-        };
-        gameOverTable.addAction(Actions.sequence(Actions.alpha(1)));
-        tap.addAction(Actions.sequence(Actions.alpha(0)));
-        gameOver.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.25f), act));
+        gameOverTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.25f)/*, act*/));
     }
 
     public void hideGameOverTable() {
         gameOverTable.addAction(Actions.fadeOut(0.25f));
+    }
+
+    public void showWaveTable(Action action) {
+        stage.addActor(waveTable);
+        waveTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.20f), action, Actions.delay(0.5f),
+                Actions.fadeOut(0.20f)));
     }
 }

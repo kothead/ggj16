@@ -12,14 +12,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.ggj16.game.GGJGame;
 import com.ggj16.game.data.ImageCache;
 import com.ggj16.game.data.SkinCache;
+import com.ggj16.game.model.TiledSprite;
 
 public class MenuScreen extends BaseScreen {
 
+    private static final String TEXTURE_BACKGROUND = "floor-tile-v7";
+
     Stage stage;
+    TiledSprite background;
 
     public MenuScreen(GGJGame game) {
         super(game);
         stage = new Stage(getViewport());
+        background = new TiledSprite(ImageCache.getTexture(TEXTURE_BACKGROUND));
+        background.setSize(getWorldWidth(), getWorldHeight());
     }
 
     @Override
@@ -56,8 +62,14 @@ public class MenuScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
+
         Gdx.gl.glClearColor( 0, 0, 0, 1 );
         Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT );
+
+        batch().begin();
+        background.draw(batch(), 0, 0);
+        batch().end();
+
         stage.act(delta);
         stage.draw();
     }

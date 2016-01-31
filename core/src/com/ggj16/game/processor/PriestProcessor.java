@@ -3,8 +3,10 @@ package com.ggj16.game.processor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.utils.Array;
 import com.ggj16.game.screen.GameScreen;
+import com.ggj16.game.util.Utils;
 import com.ggj16.game.view.ChalkPriest;
 import com.ggj16.game.view.Floor;
 import com.ggj16.game.view.LassoPriest;
@@ -19,16 +21,39 @@ public class PriestProcessor {
 
     private static final int PANIC_HALF_WIDTH = 300;
     private static final int PANIC_HALF_HEIGHT = 300;
+    private static final int WAVE_PAUSE = 3;
     Array<Priest> priests = new Array<Priest>();
     Floor floor;
     GameScreen gameScreen;
+    float waveDelay = 0;
 
     public PriestProcessor(Floor floor, GameScreen gameScreen) {
         this.floor = floor;
         this.gameScreen = gameScreen;
     }
 
+    public void startWave() {
+        Action action = new Action() {
+            @Override
+            public boolean act(float delta) {
+                int chalkAmount = Utils.randInt(2, 8);
+                int magnetAmount = Utils.randInt(1, 4);
+                generatePriests(chalkAmount, magnetAmount);
+                return true;
+            }
+        };
+        gameScreen.getViewProcessor().showWaveTable(action);
+    }
+
     public void update(float delta) {
+        if (priests.size == 0) {
+            waveDelay += delta;
+            if (waveDelay >= WAVE_PAUSE) {
+                startWave();
+                waveDelay = 0;
+            }
+        }
+
         Iterator<Priest> iter = priests.iterator();
         while (iter.hasNext()) {
             Priest priest = iter.next();
@@ -48,13 +73,13 @@ public class PriestProcessor {
         }
     }
 
-    public void generatePriests(int amount) {
-        for (int i = 0; i < amount; i++) {
+    public void generatePriests(int chalkAmount, int magnetAmount) {
+        for (int i = 0; i < chalkAmount; i++) {
             ChalkPriest priest = new ChalkPriest(gameScreen);
             priest.startDrawing();
             priests.add(priest);
         }
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < magnetAmount; i++) {
             LassoPriest priest = new LassoPriest(gameScreen);
             priests.add(priest);
         }

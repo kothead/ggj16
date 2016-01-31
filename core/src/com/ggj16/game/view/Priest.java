@@ -1,6 +1,5 @@
 package com.ggj16.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -127,7 +126,6 @@ public abstract class Priest {
     }
 
     protected void setState(State state) {
-        Gdx.app.log("STATE", state.name());
         if (this.state != state) {
             this.state = state;
             stateTime = 0;

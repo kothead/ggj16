@@ -1,6 +1,5 @@
 package com.ggj16.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -99,8 +98,15 @@ public class Player {
 
     public void reset() {
         setState(State.STAND);
-        setX(gameScreen.getFloor().getWidthInPixels() / 2);
-        setY(gameScreen.getFloor().getHeightInPixels() / 2);
+        action = Action.NONE;
+        setX(gameScreen.getFloor().getWidthInPixels() / 2 - getWidth() / 2);
+        setY(gameScreen.getFloor().getHeightInPixels() / 2 - getHeight() / 2);
+        deathTime = 0;
+        targetX = getX();
+        targetY = getY();
+        vx = 0;
+        vy = 0;
+        stateTime = 0;
     }
 
     public int getWidth() {
@@ -270,10 +276,6 @@ public class Player {
                 case TRAPPED:
                     setState(State.STAND);
                     break;
-
-//                case DYING:
-//                    gameScreen.getStateMachine().changeState(GameStates.GAME_OVER);
-//                    break;
             }
             setState(State.STAND);
         }
@@ -311,7 +313,8 @@ public class Player {
     }
 
     public void setTrapped() {
-        setTarget(Action.TRAPPED, gameScreen.getFloor().getWidthInPixels() / 2, gameScreen.getFloor().getHeightInPixels() / 2);
+        setTarget(Action.TRAPPED, gameScreen.getFloor().getWidthInPixels() / 2 - getWidth() / 2,
+                gameScreen.getFloor().getHeightInPixels() / 2 - getHeight() / 2);
     }
 
     public void release() {
