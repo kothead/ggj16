@@ -6,7 +6,7 @@ import com.badlogic.gdx.audio.Music;
 public class MusicCache {
     private static final String MUSIC_DIR = "audio/music/";
     private static final String MUSIC_EXT = ".mp3";
-    private static final float VOLUME = 1f;
+    private static final float VOLUME = 0.5f;
 
     private static String key;
     private static Music music;

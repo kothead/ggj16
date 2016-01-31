@@ -110,8 +110,6 @@ public class GameScreen extends BaseScreen implements Telegraph {
                 (int) getWorldWidth(), (int) getWorldHeight());
         portal.draw(batch());
         player.draw(batch(), delta);
-
-        fog.draw(batch(), delta);
         batch().end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -121,12 +119,13 @@ public class GameScreen extends BaseScreen implements Telegraph {
 
         batch().begin();
         priestProcessor.draw(batch());
+        fog.draw(batch(), delta);
         batch().end();
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         // draw fog
-        floor.draw(shapeRenderer, 0, 0, (int) getWorldWidth(), (int) getWorldHeight());
-        shapeRenderer.end();
+//        floor.draw(shapeRenderer, 0, 0, (int) getWorldWidth(), (int) getWorldHeight());
+//        shapeRenderer.end();
 
         stage.draw();
     }
@@ -181,6 +180,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
         priestProcessor.clear();
         priestProcessor.startWave();
         player.reset();
+        fog.rescaleAllEffects();
     }
 
     private void updateCameraPosition() {
