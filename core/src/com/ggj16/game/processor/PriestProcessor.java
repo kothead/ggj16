@@ -54,10 +54,10 @@ public class PriestProcessor {
             priest.startDrawing();
             priests.add(priest);
         }
-        /*for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1; i++) {
             LassoPriest priest = new LassoPriest(gameScreen);
             priests.add(priest);
-        }*/
+        }
     }
 
     public void draw(ShapeRenderer shapeRenderer) {

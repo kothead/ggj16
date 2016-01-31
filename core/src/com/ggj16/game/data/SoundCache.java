@@ -6,12 +6,17 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 public class SoundCache {
 
-    /*public static final String SOUND_WIN = "win";
-    public static final String SOUND_STRIKE = "strike";
-    public static final String SOUND_JUMP = "jump";*/
+    public static final String SOUND_DEATH = "death";
+    public static final String SOUND_DESTROYER = "destroyer";
+    public static final String SOUND_DRAWING = "drawing";
+    public static final String SOUND_FALLING = "falling";
+    public static final String SOUND_FALLING_TILE = "falling-tile";
+    public static final String SOUND_FEAR = "fear";
+    public static final String SOUND_LASSO = "lasso";
+    public static final String SOUND_SCREAM = "scream";
 
-    private static final String SOUND_DIR = "sound/";
-    private static final String SOUND_EXT = ".wav";
+    private static final String SOUND_DIR = "audio/sound/";
+    private static final String SOUND_EXT = ".mp3";
 
     private static ObjectMap<String, Sound> sounds;
 
@@ -19,7 +24,8 @@ public class SoundCache {
         sounds = new ObjectMap<String, Sound>();
 
         String[] keys = {
-//                SOUND_WIN, SOUND_STRIKE, SOUND_JUMP
+                SOUND_DEATH, SOUND_DESTROYER, SOUND_DRAWING, SOUND_FALLING,
+                SOUND_FALLING_TILE, SOUND_FEAR, SOUND_LASSO, SOUND_SCREAM
         };
         for (String key: keys) {
             Sound sound = Gdx.audio.newSound(Gdx.files.internal(SOUND_DIR + key + SOUND_EXT));

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.ggj16.game.data.ImageCache;
+import com.ggj16.game.data.SoundCache;
 import com.ggj16.game.model.Direction;
 import com.ggj16.game.screen.GameScreen;
 import com.ggj16.game.util.Utils;
@@ -130,6 +131,28 @@ public abstract class Priest {
         if (this.state != state) {
             this.state = state;
             stateTime = 0;
+
+            switch (state) {
+                case FALL:
+                    SoundCache.play(SoundCache.SOUND_FALLING);
+                    break;
+
+                case MAGNET:
+                    SoundCache.play(SoundCache.SOUND_LASSO);
+                    break;
+
+                case FEAR:
+                case FEAR_RUN:
+                    SoundCache.play(SoundCache.SOUND_FEAR);
+                    break;
+
+                case CHALK_DOWN:
+                case CHALK_LEFT:
+                case CHALK_RIGHT:
+                case CHALK_UP:
+                    SoundCache.play(SoundCache.SOUND_DRAWING);
+                    break;
+            }
         }
     }
 
@@ -151,7 +174,7 @@ public abstract class Priest {
             switch (state) {
                 case FALL:
                     alive = false;
-                    break;
+                    return;
             }
             setState(State.STAND);
         }

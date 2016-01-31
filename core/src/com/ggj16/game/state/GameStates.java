@@ -3,6 +3,7 @@ package com.ggj16.game.state;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
+import com.ggj16.game.data.MusicCache;
 import com.ggj16.game.screen.GameScreen;
 
 /**
@@ -13,6 +14,7 @@ public enum GameStates implements State<GameScreen> {
     GAME() {
         @Override
         public void enter(GameScreen entity) {
+            MusicCache.play("track");
             Gdx.app.log("Test", "GAME enter");
         }
 
@@ -36,6 +38,7 @@ public enum GameStates implements State<GameScreen> {
         @Override
         public void enter(GameScreen entity) {
             Gdx.app.log("Test", "PAUSE enter");
+            MusicCache.pause();
             entity.getViewProcessor().showPauseTable();
         }
 
@@ -59,6 +62,7 @@ public enum GameStates implements State<GameScreen> {
         @Override
         public void enter(GameScreen entity) {
             Gdx.app.log("Test", "GAME_OVER enter");
+            MusicCache.pause();
             entity.getViewProcessor().showGameOverTable();
         }
 

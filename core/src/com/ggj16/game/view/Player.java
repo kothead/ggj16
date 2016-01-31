@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.ggj16.game.data.ImageCache;
+import com.ggj16.game.data.SoundCache;
 import com.ggj16.game.model.Direction;
 import com.ggj16.game.screen.GameScreen;
 import com.ggj16.game.state.GameStates;
@@ -194,6 +195,7 @@ public class Player {
             deathTime += delta;
             if (deathTime >= TIME_TO_DEATH) {
                 deathTime = TIME_TO_DEATH;
+                SoundCache.play(SoundCache.SOUND_DESTROYER);
                 gameScreen.getStateMachine().changeState(GameStates.GAME_OVER);
             }
         } else if (deathTime > 0) {
@@ -240,6 +242,16 @@ public class Player {
         if (this.state != state) {
             this.state = state;
             stateTime = 0;
+
+            switch (state) {
+                case BREAK_FLOOR:
+                    SoundCache.play(SoundCache.SOUND_FALLING_TILE);
+                    break;
+
+                case SCREAM:
+                    SoundCache.play(SoundCache.SOUND_SCREAM);
+                    break;
+            }
         }
     }
 

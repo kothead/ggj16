@@ -1,5 +1,6 @@
 package com.ggj16.game.view;
 
+import com.ggj16.game.data.SoundCache;
 import com.ggj16.game.model.Direction;
 import com.ggj16.game.screen.GameScreen;
 import com.ggj16.game.util.Utils;
