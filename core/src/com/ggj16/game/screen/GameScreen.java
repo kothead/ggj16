@@ -51,7 +51,8 @@ public class GameScreen extends BaseScreen implements Telegraph {
         viewProcessor = new ViewProcessor(this, stage);
 
         sm = new DefaultStateMachine(this);
-        sm.setInitialState(GameStates.GAME);
+        //sm.setInitialState(GameStates.GAME);
+        sm.changeState(GameStates.GAME);
 
         floor = new Floor(16, 10);
         player = new Player(this);

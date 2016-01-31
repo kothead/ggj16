@@ -1,8 +1,7 @@
 package com.ggj16.game.processor;
 
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -26,6 +25,11 @@ public class ViewProcessor {
     private Table gameOverTable = new Table();
     private Table waveTable = new Table();
 
+    private Image gameOver;
+    private Label restart;
+
+    private boolean restartEnabled = false;
+
     public ViewProcessor(GameScreen gameScreen, Stage stage) {
         this.stage = stage;
         this.gameScreen = gameScreen;
@@ -35,11 +39,11 @@ public class ViewProcessor {
         gameOverTable.setFillParent(true);
         pauseTable.setFillParent(true);
         waveTable.setFillParent(true);
-        Image gameOver = new Image(ImageCache.getTexture("game_over"));
+        gameOver = new Image(ImageCache.getTexture("game_over"));
         Image pause = new Image(ImageCache.getTexture("pause"));
         Image continueBtn = new Image(ImageCache.getTexture("continue"));
         Image exitBtn = new Image(ImageCache.getTexture("exit"));
-        Label restart = new Label("Tap to restart", SkinCache.getDefaultSkin());
+        restart = new Label("Tap to restart", SkinCache.getDefaultSkin());
         Image wave = new Image(ImageCache.getTexture("wave"));
         gameOverTable.add(gameOver);
         gameOverTable.row();
@@ -72,24 +76,55 @@ public class ViewProcessor {
 
     public void showPauseTable() {
         stage.addActor(pauseTable);
-        pauseTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.25f)));
+        pauseTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.15f), new Action() {
+            @Override
+            public boolean act(float delta) {
+                pauseTable.setTouchable(Touchable.enabled);
+                return true;
+            }
+        }));
     }
 
     public void hidePauseTable() {
-        pauseTable.addAction(Actions.fadeOut(0.25f));
+        Action action = new Action() {
+            @Override
+            public boolean act(float delta) {
+                pauseTable.getParent().removeActor(pauseTable);
+                return true;
+            }
+        };
+        pauseTable.setTouchable(Touchable.disabled);
+        pauseTable.addAction(Actions.sequence(Actions.fadeOut(0.15f), action));
     }
 
     public void showGameOverTable() {
-        gameOverTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.25f)/*, act*/));
+        restart.addAction(Actions.alpha(0));
+        gameOver.addAction(Actions.alpha(0));
+        gameOverTable.addAction(Actions.alpha(1));
+        gameOver.addAction(Actions.sequence(Actions.fadeIn(0.20f), new Action() {
+            @Override
+            public boolean act(float delta) {
+                Gdx.app.log("Test", "GAME_OVER show rester");
+                restart.addAction(Actions.alpha(1));
+                restartEnabled = true;
+                return true;
+            }
+        }));
+        //gameOverTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.15f),));
     }
 
     public void hideGameOverTable() {
-        gameOverTable.addAction(Actions.fadeOut(0.25f));
+        gameOverTable.addAction(Actions.alpha(0));
+        restartEnabled = false;
     }
 
     public void showWaveTable(Action action) {
         stage.addActor(waveTable);
         waveTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.20f), action, Actions.delay(0.5f),
                 Actions.fadeOut(0.20f)));
+    }
+
+    public boolean isRestartEnabled() {
+        return restartEnabled;
     }
 }

@@ -54,7 +54,7 @@ public class Floor {
 
         initFloor();
 
-        visible = new Rectangle(tileWidth, tileHeight, getWidthInPixels() - tileWidth * 2, getHeightInPixels() - tileHeight * 2);
+
     }
 
     public void initFloor() {
@@ -63,6 +63,11 @@ public class Floor {
                 tiles[i][j] = i == 0 || j == 0 || i == height - 1 || j == width - 1 ? BLOCKED : VISIBLE;
             }
         }
+
+        visible = new Rectangle(tileWidth, tileHeight, getWidthInPixels() - tileWidth * 2, getHeightInPixels() - tileHeight * 2);
+
+        falling.clear();
+        rising.clear();
     }
 
     public void process(float delta) {

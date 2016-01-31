@@ -1,6 +1,5 @@
 package com.ggj16.game.state;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.ggj16.game.data.MusicCache;
@@ -15,14 +14,6 @@ public enum GameStates implements State<GameScreen> {
         @Override
         public void enter(GameScreen entity) {
             MusicCache.play("track");
-            Gdx.app.log("Test", "GAME enter");
-        }
-
-        @Override
-        public void update(GameScreen entity) {
-//            if (entity.hasEnded()) {
-//                entity.getStateMachine().changeState(GAME_OVER);
-//            }
         }
 
         @Override
@@ -37,7 +28,6 @@ public enum GameStates implements State<GameScreen> {
     PAUSE() {
         @Override
         public void enter(GameScreen entity) {
-            Gdx.app.log("Test", "PAUSE enter");
             MusicCache.pause();
             entity.getViewProcessor().showPauseTable();
         }
@@ -60,22 +50,22 @@ public enum GameStates implements State<GameScreen> {
     GAME_OVER() {
         @Override
         public void enter(GameScreen entity) {
-            Gdx.app.log("Test", "GAME_OVER enter");
             MusicCache.pause();
             entity.getViewProcessor().showGameOverTable();
         }
 
         @Override
         public void exit(GameScreen entity) {
-            Gdx.app.log("Test", "Game Over exit");
             entity.getViewProcessor().hideGameOverTable();
         }
 
         @Override
         public boolean onMessage(GameScreen entity, Telegram telegram) {
             if (telegram.message == MessageType.TAP) {
-                entity.getStateMachine().changeState(GameStates.GAME);
-                entity.restart();
+                if (entity.getViewProcessor().isRestartEnabled()) {
+                    entity.getStateMachine().changeState(GameStates.GAME);
+                    entity.restart();
+                }
             } else if (telegram.message == MessageType.BACK_PRESS) {
                 entity.getGame().exit();
             }
