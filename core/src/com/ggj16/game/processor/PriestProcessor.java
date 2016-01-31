@@ -27,6 +27,8 @@ public class PriestProcessor {
     GameScreen gameScreen;
     float waveDelay = 0;
 
+    Rectangle panicAttack = null;
+
     public PriestProcessor(Floor floor, GameScreen gameScreen) {
         this.floor = floor;
         this.gameScreen = gameScreen;
@@ -107,8 +109,13 @@ public class PriestProcessor {
     }
 
     public void panic(float x, float y) {
-        Rectangle panicAttack = new Rectangle(x - PANIC_HALF_WIDTH, y - PANIC_HALF_HEIGHT,
-                PANIC_HALF_WIDTH * 2, PANIC_HALF_HEIGHT * 2);
+        if (panicAttack == null) {
+            panicAttack = new Rectangle(x - PANIC_HALF_WIDTH, y - PANIC_HALF_HEIGHT,
+                    PANIC_HALF_WIDTH * 2, PANIC_HALF_HEIGHT * 2);
+        } else {
+            panicAttack.set(x - PANIC_HALF_WIDTH, y - PANIC_HALF_HEIGHT,
+                    PANIC_HALF_WIDTH * 2, PANIC_HALF_HEIGHT * 2);
+        }
         for (Priest priest: priests) {
             if (panicAttack.contains(priest.getX(), priest.getY())) {
                 priest.panicStrike(x, y);

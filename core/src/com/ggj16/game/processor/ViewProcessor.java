@@ -1,7 +1,9 @@
 package com.ggj16.game.processor;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -104,13 +106,11 @@ public class ViewProcessor {
         gameOver.addAction(Actions.sequence(Actions.fadeIn(0.20f), new Action() {
             @Override
             public boolean act(float delta) {
-                Gdx.app.log("Test", "GAME_OVER show rester");
                 restart.addAction(Actions.alpha(1));
                 restartEnabled = true;
                 return true;
             }
         }));
-        //gameOverTable.addAction(Actions.sequence(Actions.alpha(0), Actions.fadeIn(0.15f),));
     }
 
     public void hideGameOverTable() {

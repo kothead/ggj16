@@ -256,6 +256,7 @@ public class Player {
 
                 case SCREAM:
                     SoundCache.play(SoundCache.SOUND_SCREAM);
+                    gameScreen.getPriestProcessor().panic(x + getWidth() / 2, y + getHeight() / 2);
                     break;
             }
         }
@@ -270,7 +271,7 @@ public class Player {
                     break;
 
                 case SCREAM:
-                    gameScreen.getPriestProcessor().panic(x + getWidth() / 2, y + getHeight() / 2);
+                    //gameScreen.getPriestProcessor().panic(x + getWidth() / 2, y + getHeight() / 2);
                     break;
 
                 case TRAPPED:
