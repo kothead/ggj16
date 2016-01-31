@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.ggj16.game.data.ImageCache;
 import com.ggj16.game.model.Direction;
+import com.ggj16.game.screen.GameScreen;
 import com.ggj16.game.util.Utils;
 
 /**
@@ -16,7 +17,7 @@ import com.ggj16.game.util.Utils;
  */
 public abstract class Priest {
 
-    protected static final float SPEED = 300;
+    protected static final float SPEED = 400;
 
     public enum Action {
         NONE, RUN, ACT, IDLE_RUN, ACTING, PANIC
@@ -95,13 +96,13 @@ public abstract class Priest {
 
     private State state;
     private float stateTime;
-    private Floor floor;
+    private GameScreen screen;
     private Rectangle boundingBox = new Rectangle();
 
     private Action action = Action.RUN;
 
-    public Priest(Floor floor) {
-        this.floor = floor;
+    public Priest(GameScreen screen) {
+        this.screen = screen;
         setState(State.STAND);
     }
 
@@ -114,6 +115,7 @@ public abstract class Priest {
         if (state != State.FALL) {
             batch.draw(region, x, y, region.getRegionWidth(), region.getRegionHeight());
         } else {
+            Floor floor = screen.getFloor();
             batch.draw(region, fallenTileX * floor.getTileWidth() + (floor.getTileWidth() - getWidth()) / 2,
                     fallenTileY * floor.getTileHeight() + (floor.getTileHeight() - getHeight()) / 2,
                     region.getRegionWidth(), region.getRegionHeight());
@@ -163,8 +165,12 @@ public abstract class Priest {
         return direction;
     }
 
+    public GameScreen getGameScreen() {
+        return screen;
+    }
+
     public Floor getFloor() {
-        return floor;
+        return screen.getFloor();
     }
 
     public void setPosition(float x, float y) {
@@ -242,8 +248,8 @@ public abstract class Priest {
         vx = 0;
         vy = 0;
 
-        int tileWidth = floor.getTileWidth();
-        int tileHeight = floor.getTileHeight();
+        int tileWidth = getFloor().getTileWidth();
+        int tileHeight = getFloor().getTileHeight();
         fallenTileX = (int) ((getX() + getWidth() / 2) / tileWidth);
         fallenTileY = (int) ((getY() + getHeight() / 2) / tileHeight);
 

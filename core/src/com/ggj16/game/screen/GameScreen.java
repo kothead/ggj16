@@ -19,10 +19,7 @@ import com.ggj16.game.processor.InputProcessor;
 import com.ggj16.game.processor.PriestProcessor;
 import com.ggj16.game.processor.ViewProcessor;
 import com.ggj16.game.state.GameStates;
-import com.ggj16.game.view.Floor;
-import com.ggj16.game.view.Player;
-import com.ggj16.game.view.Portal;
-import com.ggj16.game.view.Priest;
+import com.ggj16.game.view.*;
 
 /**
  * Created by kettricken on 30.01.2016.
@@ -41,6 +38,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
     private Floor floor;
     private Player player;
     private Portal portal;
+    private Fog fog;
 
     private PriestProcessor priestProcessor;
     private ShapeRenderer shapeRenderer = new ShapeRenderer(); // delete if the final fog will not need this
@@ -64,6 +62,7 @@ public class GameScreen extends BaseScreen implements Telegraph {
         priestProcessor.generatePriests(4);
 
         portal = new Portal(this);
+        fog = new Fog(this);
     }
 
     @Override
@@ -110,6 +109,8 @@ public class GameScreen extends BaseScreen implements Telegraph {
                 (int) getWorldWidth(), (int) getWorldHeight());
         portal.draw(batch());
         player.draw(batch(), delta);
+
+        fog.draw(batch(), delta);
         batch().end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -148,6 +149,10 @@ public class GameScreen extends BaseScreen implements Telegraph {
     @Override
     protected void layoutViewsPortrait(int width, int height) {
 
+    }
+
+    public void onVisibleZoneCut() {
+        fog.rescaleAllEffects();
     }
 
     public Floor getFloor() {

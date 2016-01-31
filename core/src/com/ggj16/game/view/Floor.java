@@ -107,6 +107,9 @@ public class Floor {
                         && tilex < width && tilex >= 0) {
 
                     float visibility = tiles[tiley][tilex];
+                    if (visibility == BLOCKED) {
+                        visibility = VISIBLE;
+                    }
 
                     if (visibility >= INVISIBLE && visibility < VISIBLE) {
                         batch.draw(holeAnimation.getKeyFrame(stateTime), j, i, tileWidth, tileHeight);
@@ -153,14 +156,14 @@ public class Floor {
 
     public void draw(ShapeRenderer shapeRenderer, int offsetX, int offsetY, int screenWidth, int screenHeight) {
         // x, y are the bottom left corner
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(1, 0, 0, 1);
-        shapeRenderer.rect(visible.x, visible.y, visible.width, visible.height);
+//        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+//        shapeRenderer.setColor(1, 0, 0, 1);
+//        shapeRenderer.rect(visible.x, visible.y, visible.width, visible.height);
     }
 
-    public void cut(ChalkLine chalkLine) {
+    public boolean cut(ChalkLine chalkLine) {
         if (chalkLine == null) {
-            return;
+            return false;
         }
         if (chalkLine.start.y == chalkLine.end.y) {
             if (chalkLine.start.y < getHeightInPixels() / 2) {
@@ -186,6 +189,7 @@ public class Floor {
                 }
             }
         }
+        return true;
     }
 
     public float getVisibleTop() {

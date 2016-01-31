@@ -50,14 +50,14 @@ public class PriestProcessor {
 
     public void generatePriests(int amount) {
         for (int i = 0; i < amount; i++) {
-            ChalkPriest priest = new ChalkPriest(floor);
+            ChalkPriest priest = new ChalkPriest(gameScreen);
             priest.startDrawing();
             priests.add(priest);
         }
-        for (int i = 0; i < 1; i++) {
-            LassoPriest priest = new LassoPriest(floor, gameScreen);
+        /*for (int i = 0; i < 1; i++) {
+            LassoPriest priest = new LassoPriest(gameScreen);
             priests.add(priest);
-        }
+        }*/
     }
 
     public void draw(ShapeRenderer shapeRenderer) {

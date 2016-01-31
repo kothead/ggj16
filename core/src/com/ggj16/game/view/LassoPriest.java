@@ -16,8 +16,8 @@ public class LassoPriest extends Priest {
 
     float actingTimer = 0;
 
-    public LassoPriest(Floor floor, GameScreen gameScreen) {
-        super(floor);
+    public LassoPriest(GameScreen gameScreen) {
+        super(gameScreen);
         this.gameScreen = gameScreen;
         setInitialPosition();
         setRandomTargetPosition(Action.IDLE_RUN);

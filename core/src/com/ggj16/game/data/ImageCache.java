@@ -38,4 +38,7 @@ public class ImageCache {
         return getFrames(name, offset, count, false, false);
     }
 
+    public static TextureAtlas getAtlas() {
+        return atlas;
+    }
 }

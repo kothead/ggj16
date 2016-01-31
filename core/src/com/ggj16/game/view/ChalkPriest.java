@@ -2,6 +2,7 @@ package com.ggj16.game.view;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.ggj16.game.model.Direction;
+import com.ggj16.game.screen.GameScreen;
 import com.ggj16.game.util.Utils;
 
 /**
@@ -15,8 +16,8 @@ public class ChalkPriest extends Priest {
 
     private ChalkLine chalkLine;
 
-    public ChalkPriest(Floor floor) {
-        super(floor);
+    public ChalkPriest(GameScreen screen) {
+        super(screen);
         initNewSequence(true);
     }
 
@@ -80,7 +81,8 @@ public class ChalkPriest extends Priest {
                 setRandomTargetPosition(Action.IDLE_RUN);
             }
         } else if (action == Action.NONE) {
-            getFloor().cut(chalkLine);
+            boolean cut = getFloor().cut(chalkLine);
+            if (cut) getGameScreen().onVisibleZoneCut();
             chalkLine = null;
             initNewSequence(false);
         }
